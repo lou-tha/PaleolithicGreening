@@ -1,0 +1,742 @@
+# PaleolithicGreening
+
+ Supplement for the publication: **Where the grass is greener: Estimated vegetation periods and their explanatory potential for site distribution in the East European Plain**
+
+**Authors:** Florian Linsel, Louise Tharandt
+
+**Date:** 03/31/2022
+
+**Description:**
+
+> Our study relies on the following work routine. This supplement is written in R. One of our primary goals is to perform all functions provided. The documentation and the complete workflow are published. All consecutive analyses can follow the exemplary procedure.  This script contains the main functionality of our research, in which all parameters needed for conducting the functions used in scripts, libraries and packages are introduced. Our project is reproducible, which is easily done by running the following script (main.R).
+
+---
+
+## Workflow
+
+To start, open the main.R script, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the funcions and script, check the folder VegPer_Results (see section folder structure) and view the created csv files. Depending on the computer this code runs on and the number of data that is used, the results can appear only after a while.
+
+---
+
+## **Code**
+
+The following scripts were used to automatically calculate the vegetation periods and pull factors over multiple stadials and interstadials for BlackSea and NGRIP data sets.
+
+---
+
+## main.R
+
+---
+
+### Variables
+
+*parameter* : LGM, Black Sea, NGRIP
+
+*LGM* : base data file
+
+*period* : GS-3, GI-3, GS-4, GI-4, GS-5.1, GI-5.1, GS-5.2, GI-5.2, GS-6, GI-6, GS-7, GI-7, GS-8, GI-8, GS-9, GI-9
+
+*month* : 1 through 12 (1:12)
+
+*step_day_size* : 2, 7, 14, 21, 28
+
+*step_list* : 20, 60, 47.5, 65, 2.5
+
+*df_result_result* : create new data frame
+
+### Details
+
+As one of the most important variables to distinguish, the three  different data files (LGM, Black Sea, NGRIP) are listed in the classification **parameter**.
+
+The base data file is assigned to **LGM** from which all subsequent results stem.
+
+There are 16 different time periods, eight stadial and eight interstadial periods (GS-3, GI-3, GS-4, GI-4, GS-5.1, GI-5.1, GS-5.2, GI-5.2, GS-6, GI-6, GS-7, GI-7, GS-8, GI-8, GS-9, GI-9), which are assigned to **period**.
+
+The parameter **month** is assigned with the number of months of a year, to show the change in temperature over the period of a year.
+
+To show the transition of the vegetation period and temperature over an area in a time frame, the parameter **step_day_size** (2,7,14,21,28) is used.
+
+To define and edit the coordinates as well as the distance between the coordinate points, the parameter **step_list** (20, 60, 47.5, 65, 2.5) is used. Latidute south to north: 47.5 to 65, longitude west to east: 20 to 60, distance: 2.5
+
+**df_result_result** creates a data frame to build a new and better table, filtering the vegetation period table results.
+
+---
+
+### Folder structure and contents
+
+> this folder structure has been built to clearly structure the data input and the results that are generated through this script.
+
+* Base Data:
+  * VegPer_Base_Data/LGM_Base_Data.csv
+  * VegPer_Base_Data/Period_BlackSea.csv
+  * VegPer_Base_Data/Period_NGRIP.csv
+  * VegPer_Base_Data/QGIS_ID_File.csv
+  * VegPer_Base_Data/QGIS_ID_File.xlsx
+
+* QGIS
+  * pycache (Folder)
+  * exdata (Folder)
+  * froot_loops_layout_temp.qpt
+  * Froot_Loops_QGIS_3_layout.qgz
+  * geographical_data (Folder)
+  * layout_data (Folder)
+  * link_node_data (Folder)
+  * links (Folder)
+  * python_scripts (Folder)
+  * rasterfiles (Folder)
+  * sites (Folder)
+  * VegPer_layout.qgz
+
+* Scripts
+  * main.R
+  * Calc21Day.R
+  * CalcStepsStandardised.R
+  * CalcFilter.R
+  * plot_2x2.R
+
+* Result Folder Structure
+  * VegPer_Results/21Day_BlackSea_Results
+  * VegPer_Results/21Day_LGM_Results
+  * VegPer_Results/21Day_NGRIP_Results
+  * VegPer_Results/Calc_Step_Results
+    * VegPer_Results/Calc_Step_Results/Calc_Step_BlackSea
+    * VegPer_Results/Calc_Step_Results/Calc_Step_LGM
+    * VegPer_Results/Calc_Step_Results/Calc_Step_NGRIP
+  * VegPer_Results/Filter_Results
+    * VegPer_Results/Filter_Results/Filter_Results_BlackSea
+      * VegPer_Results/Filter_Results/Filter_Results_BlackSea/nodes
+    * VegPer_Results/Filter_Results/Filter_Results_LGM
+      * VegPer_Results/Filter_Results/Filter_Results_LGM/nodes
+    * VegPer_Results/Filter_Results/Filter_Results_NGRIP
+      * VegPer_Results/Filter_Results/Filter_Results_NGRIP/nodes
+  
+---
+
+```{r, message=FALSE, warning=FALSE, error=FALSE, eval=FALSE}
+
+#libraries
+
+library(tidyverse)
+library(dplyr)
+library(purrr)
+
+# links to the required R scripts
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+source("../VegPer_R_Scripts/Calc21Day.R")
+source("../VegPer_R_Scripts/CalcStepsStandardised.R")
+source("../VegPer_R_Scripts/CalcFilter.R")
+source("../VegPer_R_Scripts/plot_2x2.R")
+
+# set workspace
+setwd("../") #reference inside of the github / working directory folder
+
+# global parameter: 
+parameter <- c("BlackSea" ,"NGRIP", "LGM") #name of the period data sets  
+
+# create new directories and folders for the results
+for (p in parameter){
+  dir.create(file.path(paste0('VegPer_Results/')), 
+  showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Calc_Step_Results/Calc_Step_',p)), 
+  showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/21Day_',p,'_Results')), 
+  showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results')), 
+  showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p)), 
+  showWarnings = FALSE) 
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p,'/nodes')), 
+  showWarnings = FALSE)
+}
+
+# input files
+# LGM base data that will be used to add factors to get the temperature data of stadial and interstadial periods
+LGM <- read.csv("VegPer_Base_Data/LGM_base_data.csv", header = T,  fileEncoding="UTF-8-BOM")
+
+# list of stadial and interstadial climatic periods of interest:
+period <- c("GS-3", "GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9") 
+
+
+### Calc21Day.R
+
+# list of months
+month <- c(1:12)
+
+# function to calculate the 21 day average of all periods and data sets
+lapply(parameter,DAY_21,period,month) 
+
+
+### CalcStepsStandardised.R
+
+# list of parameters needed for the step-function:
+step_day_size <- c(2,7,14,21,28) 
+
+# list of coordinates:
+step_list <- c(20, 60, 47.5, 65, 2.5)
+
+# set workspace and folders for results
+setwd("VegPer_Results/")
+
+# function to calculate the steps between each coordinate node of all periods and data sets:
+lapply (parameter,stepfunction,period,step_day_size) 
+
+
+### CalcFilter.R
+
+setwd("../")
+setwd("VegPer_Results/")
+
+df_result_result <- data.frame()
+
+# function to filter the calculated results of all periods and data sets:
+lapply (parameter,VegPer_Results,period,df_result_result) 
+
+
+#### create the plots with Python and QGIS ####
+
+
+### plot_2x2
+
+period_concat <- list(list("GS-3", "GI-3"),list("GS-4", "GI-4"), list("GS-5.1", "GI-5.1"),list("GS-5.2", "GI-5.2"), list("GS-6", "GI-6"),list("GS-7", "GI-7"), list("GS-8", "GI-8"), list("GS-9", "GI-9")) 
+
+
+setwd("extdata")
+lapply (parameter,plot_2x2,period_concat)
+
+
+### Python ###
+
+library(reticulate)
+use_python("C:/Program Files/QGIS 3.10/apps/Python37")
+#C:\Program Files\GDAL
+Sys.setenv(RETICULATE_PYTHON = "C:/Program Files/QGIS 3.10/apps/Python37")
+getwd()
+setwd("VegPer_QGIS/")
+reticulate::py_discover_config(required_module = "gdal")
+source_python("Froot_Loops_QGIS_3.py")
+
+```
+
+---
+
+### Calc21Day.R
+
+> The base temperature LGM (last glacial maximum) data is used to calculate the vegetation period during the LGM and between stadial periods (GS-3 until GS-9) as well as interstadial periods (GI-3 until GI-9). Two different period correction factor tables are used, which calculate the vegetation period with NGRIP data and with Black Sea data in the LGM and stadial/interstadial periods. The temperature data is then filtered to display the vegetation period of each time period. First the mean of 3 temperatures has to be equal or above 5 degrees Celsius. The temperature data is then filtered and shows each day, that has a mean temperature >= 5 °C. The vegetation period start and end is defined as 21 consecutive days with a mean temperature of equal or above 5 degrees Celsius. The new temperature data is filtered and shows the start and end of the vegetation periods for every time period.
+
+#### Calc21Day Functions
+
+`calc_21`
+
+`period_correction`  
+
+`Day_21`
+
+#### Details Calc21Day Functions
+
+The function `Day_21` sets up the basic calculation and code for the vegetation period data. The base LGM (last glacial maximum) data shows the temperature each day of the year (*Temp*) as well as the mean temperature in another column (*Temp_mean*). This file is imported and renamed **LGM_temp** to work with and and change the file, without corrupting the main data file. The function `Day_21` sets up the calculation of the base LGM data first, to have **LGM_temp** run through the `calc_21` function and afterwards use the calculated Vegetation data for LGM to then add the season factors (`period_correction` function) to calculate the vegetation periods for the defined interstadial and stadial time periods.
+
+With `calc_21` the start and end of the vegetation period is calculated. We have set the start and end of the vegetation period as 21 days of consecutive temperatures above 5 degrees Celsius. `calc_21` uses two subsets which define if the mean temperature was above or below 5 degrees Celsius for 21 consecutive days before or after the currently checked Day of Year. The function runs trough the column *Veg* of the sorted data (LGM_temp) and shows the vegetation period of a temperature mean of 5 degrees Celsius for at least 21 consecutive days by depicting either a 1 (if at least 21 consecutive days) or 0 (if less than 21 consecutive days) in the column *Veg.21Day*.
+
+The function `period_correction` uses the base data (LGM), which has the calculated mean temperature, and sorts the data to show if the mean temperature is above or below 5 degrees Celsius. It is sorted by depicting either a 1 (if temperature is over 5 degrees) or 0 (if temperature is below 5 degrees) into the column *Veg*. The function also adds the period correction factor data (period_correction) from NGRIP and Black Sea to the base data (LGM). Afterwards the `calc_21` function is used to sort and show the vegetation period of the new data with the added season factors.
+
+```{r, message=FALSE, eval=FALSE}
+
+# generate the vegetation period for LGM
+
+calc_21 <- function (LGM_temp) {
+ i = 1 
+ while (i < nrow(LGM_temp)){ # all rows will be calculated (1-49640)
+  
+  if(LGM_temp[i,]$Temp_mean >= 5){ 
+   LGM_temp[i,]$Veg = 1 
+  }else { 
+   LGM_temp[i,]$Veg = 0 
+  }
+  
+  test1 <- subset(LGM_temp, ID >= i & ID < i+21)
+  test2 <- subset(LGM_temp, ID <= i & ID > i-21)
+  
+  if(sum(test1$Veg == 1) == 21 || sum(test2$Veg == 1) == 21){ 
+   LGM_temp[i,]$Veg.21Day = 1
+  }else { # 
+   LGM_temp[i,]$Veg.21Day = 0 
+  }
+  
+  i=i + 1
+ }
+ return (LGM_temp)
+}
+
+# generate new temperature data and vegetation periods for BlackSea and NGRIP
+
+period_correction <- function (x,p,month) { 
+
+  LGM_temp <- LGM # the existing LGM data is assigned to a new object, so the original data won't be manipulated
+
+  LGM_temp$Period = x # the period list is assigned
+
+  period_corr <- read.csv(paste("VegPer_Base_Data/Period_", p, ".csv", sep=""), header =T,  check.names = F)
+  a <- period_corr[period_corr[,"Time"]==x,]
+  
+  for(y in month) {
+   b <- a[,paste(y)]
+   LGM_temp[LGM_temp[,"Month"]==y,]$Temp = LGM_temp[LGM_temp[,"Month"]==y,]$Temp +b 
+   LGM_temp[LGM_temp[,"Month"]==y,]$Temp_mean = LGM_temp[LGM_temp[,"Month"]==y,]$Temp_mean +b 
+  }
+  
+  i = 1
+
+  while (i < nrow(LGM_temp)){ 
+   if(LGM_temp[i,]$Temp_mean >= 5){ 
+    LGM_temp[i,]$Veg = 1 
+   }else { 
+    LGM_temp[i,]$Veg = 0 
+   }
+
+   i=i + 1
+  }
+  
+  # calc_21 function for the data sets for BlackSea and NGRIP
+
+  i = 1
+  while (i < nrow(LGM_temp)){
+   
+   test1 <- subset(LGM_temp, ID >= i & ID < i+21)
+   test2 <- subset(LGM_temp, ID <= i & ID > i-21)
+   
+   
+   if(sum(test1$Veg == 1) == 21 || sum(test2$Veg == 1) == 21){ 
+    LGM_temp[i,]$Veg.21Day = 1 
+   }else { 
+    LGM_temp[i,]$Veg.21Day = 0 
+   }
+   
+   i=i + 1
+  }
+
+  # export path
+  path <- paste("VegPer_Results/21Day_", p, "_Results/",sep="")
+  
+  # export the data in the for loop as new .csv file with the same period name as the period factor that was used 
+  write.csv(LGM_temp, paste(path, x,".csv",sep=""))
+}
+
+# start the function to generate new temperature data and vegetation periods for LGM, BlackSea and NGRIP
+
+DAY_21 <- function(p,period,month){
+ LGM <- read.csv("VegPer_Base_Data/LGM_base_data.csv", header = T,  fileEncoding="UTF-8-BOM")
+
+ if (p == "LGM") {
+
+  path <- paste("VegPer_Results/21Day_", p, "_Results/",sep="")
+  LGM_temp <- LGM
+  LGM_temp <- calc_21(LGM_temp)
+  write.csv(LGM_temp, paste(path,'21Day_',p, ".csv",sep=""))
+
+ }else{
+
+  # calculate new temperature data for BlackSea and NGRIP with the period_correction function
+  lapply(period,period_correction,p,month)
+ }
+}
+
+```
+
+---
+
+### CalcStepStandardised.R
+
+> After finalising the vegetation period results, the data is divided into two main datasets – the spring/summer and the autumn/winter sets. While the spring/summer data is used to estimate pull factors towards a later greening, the autumn/winter data aims at estimating a later end of the fall. The basic rule to determine the movement is a step function, which is represented each by drawing a directed link between two nodes. The estimated begin respectively end of the vegetation period is regarded in this calculation and determines whether a link is defined. Each link is directed and can show the principle movement directory. The minimum threshold between two points is defined as two days.
+
+#### CalcStepStandardised Functions
+
+`stepping`
+
+`QGIS_ID`
+
+`stepfunction`
+
+#### Details CalcStepStandardised Functions
+
+The `stepfunction` seperate the LGM and BlackSea/NGRIP datasets and sets up the function `stepping` for LGM, NGRIP and BlackSea, with  the *step_day_size* (2,7,14,21,28).
+
+The function `stepping` calculates the vegetation change and the route of transmission of the fauna migration in spring and autumn, by seperating the data into to sets: spring/summer and fall/winter. It will calculate the amount of days between coordinate nodes and vegetation period starts end ends.
+
+To define the coordinate nodes and step directions for the images in QGIS the function `QGIS_ID` sets up the calculation for ID points.
+
+```{r, message=FALSE, eval=FALSE}
+
+# calculate the vegetation change and the route of transmission in spring and autumn
+
+stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, step,step_day_size,p){
+
+  tbl <-
+    list.files(pattern = paste (csv_file,".csv", sep= '')) %>% 
+    map_df(~read_csv(.))
+  
+
+  # the for loop starts with the set up of the stadial or interstadial that is calculated
+  
+  temp_data <- tbl
+  
+  #long_bottom = 20, long_top = 60, lati_west = 47.5, lati_east = 65, step = 2.5
+  #lat_bottom = 47.5, lat_top = 65, long_west = 20, long_east = 60, step = 2.5
+  
+  VegPeriod_complete <- tbl[tbl$Veg.21Day == 1,]
+  df_result <- data.frame(c("a","b","c","d","e","f","g","h"))
+  df_result_max <- data.frame(c("a","b","c","d","e","f","g","h"))
+
+  text =''
+  
+  # calculation of the min, max, sum and mean of DOY and sum of temperatures
+
+  for (long in seq(from = long_bottom, to = long_top, step)){ # runs through every longitude
+    
+    #calculation of the vegetation change and the route of transmission of the fauna 
+    
+    # migration in spring
+    for (lat in seq(from = lati_west, to = lati_east, step)){ # runs through every latitude
+      result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] #filtering point
+      data <- min(result$DOY, na.rm=T) 
+      for (xlong in seq(from = -step, to = step, step)){ 
+        for (ylati in seq(from = 0, to = step, step)){
+          for (a in step_day_size){
+            
+            test <- VegPeriod_complete[VegPeriod_complete$Long == long + xlong & VegPeriod_complete$Lat == lat + ylati,]
+            data_test <- min(test$DOY, na.rm=T)
+            if (data_test == Inf){break 
+            } else if (data == -Inf){break
+            } else if (data == 0){break
+            } else if (data == data_test+1){break
+            } else if (data == data_test){break
+            } else if (data <= data_test-a)
+              {stats <- c(long,lat,long+xlong,lat+ylati,data_test-data,a,QGIS_ID (lat,long),QGIS_ID (lat+ ylati,long + xlong)) 
+              
+            } else {
+              break
+            }
+            df_result <- cbind (df_result, stats)
+
+          }
+        }
+      }
+      
+      # migration in autumn
+      data_max <- max(result$DOY, na.rm=T) 
+      for (xlong in seq(from = -step, to = step, step)){ 
+        for (ylati in seq(from = -step, to = 0, step)){
+          for (a in step_day_size){
+            
+            test <- VegPeriod_complete[VegPeriod_complete$Long == long + xlong & VegPeriod_complete$Lat == lat + ylati,]
+            data_test_max <- max(test$DOY, na.rm=T)
+            if (data_max == -Inf){ break 
+            } else if (data_max == Inf){break
+            } else if (data_max == 0){break
+            } else if (data_max == data_test_max){break
+            } else if (data_max == data_test_max-1){break
+            } else if (data_max <= data_test_max-a)
+              {stats_max <- c(long,lat,long+xlong,lat+ylati,data_test_max-data_max,a,QGIS_ID (lat,long),QGIS_ID (lat+ ylati,long + xlong)) 
+
+            } else {
+              break
+            }
+            
+            df_result_max <- cbind (df_result_max, stats_max)
+
+          }
+        }
+      }
+    }
+    if (p == "NGRIP" && csv_file == "GS-6" && lat == 65 && long == 20) {stats_max <- ''}
+    df_result <- cbind (df_result, stats)
+    df_result_max <- cbind (df_result_max, stats_max)
+  }
+  
+  df_result_min <- df_result %>% t(.) %>% data.frame(.) %>% .[-c(0,1),]
+  df_result_max <- df_result_max %>% t(.) %>% data.frame(.) %>% .[-c(0,1),]
+  rownames(df_result_min) <- NULL
+  rownames(df_result_max) <- NULL
+  
+  
+  df_result_min [0,1] <- paste('"', df_result_min [0,1], sep ="")
+  df_result_max [0,1] <- paste('"', df_result_min [0,1], sep ="")
+
+  
+  path <- paste("../Calc_Step_Results/Calc_Step_",p,"/",sep="")
+  x = "export"
+  
+  write.csv(df_result_min, paste(path,p,'_',csv_file,"_min.csv",sep=""), row.names = F, col.names=F)
+  write.csv(df_result_max, paste(path,p,'_',csv_file,"_max.csv",sep=""), row.names = F, col.names=F)
+}
+
+# define the coordinate nodes and step directions
+
+QGIS_ID <- function (lat,long) {
+  QGIS_ID <- read_csv('../../VegPer_Base_Data/QGIS_ID_File.csv')
+  val <- paste(long,'/',lat,sep='')
+  QGIS_ID$Target == val
+  out <- QGIS_ID[QGIS_ID$Target == val,]$ID
+  return (out)
+}
+
+# seperate the LGM and BlackSea/NGRIP datasets and sets up the function stepping
+
+stepfunction <- function(p,period,step_day_size){
+  
+  if (p == "LGM") {
+    period = "21Day_LGM"
+
+    adress <- paste0("21Day_",p,"_Results",sep="")
+    setwd(adress)
+    stepping (period, step_list [1], step_list [2], step_list [3], step_list [4], step_list [5],step_day_size,p)
+    
+  }else {
+    
+    adress <- paste0("21Day_",p,"_Results",sep="")
+    setwd(adress)
+
+    lapply(period, step_list [1], step_list [2], step_list [3], step_list [4], step_list [5],step_day_size,p)
+    setwd("../")
+  }
+}
+
+```
+
+---
+
+### CalcFilter.R
+
+> The data created with the R script 21Day_ containing new temperature data with the use of the different period correction factor data tables as well as the creation of Vegetation periods, is now being sorted and compacted to show the result in a clearer overview. It will also be used to create nodes, which are necessary to portray the vegetation movement in QGIS.
+
+#### CalcFilter Functions
+
+`publication`
+
+`interstadial`
+
+`VegPer_Results`
+
+#### Details CalcFilter Functions
+
+`VegPer_Results` separates the LGM file and the NGRIP/BlackSea files and sets up the calculation of the `interstadial` and `publication` script.
+
+`publication` loops over all newly created data and filters the results of the first day of the vegetation period *Start veg. day*, the last day of the Vegetation Period *End veg. day*, the sum of days within the Vegetation Period *Veg. sum day* and the sum of the temperatures within the Vegetation Period *Sum of temperature*.
+The function `publication` also creates the nodes, which are used for the stepping function (**CalcStep standardised**) and are necessary for the plotting of images in QGIS.
+
+The function `interstadial` sets up the `publication` script and uses the filtered and compacted data to export the filtered results of each period.
+
+```{r, message=FALSE, eval=FALSE}
+
+#
+
+publication <- function (path,tbl,inter) { 
+ 
+ temp_data <- tbl 
+ 
+ VegPeriod_complete <- tbl[tbl$Veg.21Day == 1,]
+
+ df_result <- data.frame()
+ text = p
+
+ # creation of rows for the filtered csv file
+ for (i in seq(from = 47.5, to = 65, 2.5)){ text = paste (c(text,'', i, 'Start veg. day', 'End veg. day', 'Veg. sum days','Sum of temperature'))}
+ df_result <- cbind(text)
+ 
+ #creation of nodes:
+ text = paste (c('','ID','DOY','LAT','LONG','MIN','QGIS_ID')) 
+ df_node_min <- cbind(text)
+ text = paste (c('','ID','DOY','LAT','LONG','MAX','QGIS_ID')) 
+ df_node_max <- cbind(text)
+ 
+ # calculation of the min, max, sum and mean of DOY and sum of temperature
+ for (long in seq(from = 20, to = 60, 2.5)){ # runs through every longitude
+  
+  node_min = ''
+  node_max = ''
+  stats=''
+  
+  for (lat in seq(from = 47.5, to = 65, 2.5)){ # runs through every latitude
+   result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] # filtering according to coordinates
+   stats <- c(stats,'',long,min(result$DOY, na.rm=T),max(result$DOY,na.rm=T),max(result$DOY,na.rm=T)-min(result$DOY, na.rm=T),sum(result$Temp_mean,na.rm=T)) 
+   
+   #creating and merging the data with the node files
+   node_min = c('',paste(long,'/',lat, sep=''),min(result$DOY, na.rm=T),lat,long,'Min',QGIS_ID (lat,long))
+   node_max = c('',paste(long,'/',lat, sep=''),max(result$DOY, na.rm=T),lat,long,'Max',QGIS_ID (lat,long))
+   
+   df_node_min = cbind(df_node_min, node_min) 
+   df_node_max = cbind(df_node_max, node_max)
+  }
+
+  # preparation of the csv export (publication)
+  assign(paste(long), stats) 
+  name <- paste(long)
+
+  df_result <- cbind (df_result, stats)
+  
+ }
+ 
+ if (inter == "GI-3"){df_result_result <- data.frame(df_result)} else {df_result_result <- rbind(df_result_result[,],df_result[,])}
+ 
+
+ print(paste(path,inter,".csv",sep=""))
+ print(path)
+ 
+ write.table(df_result, paste(path,inter,".csv",sep=""), sep=',', row.names = FALSE, col.names = FALSE)
+ write.table(df_node_min %>% t(.) %>% data.frame(.) %>% .[,-1] %>% .[.[,2] != 'Inf',] %>% .[.[,2] != '-Inf',], paste(path,'nodes/nodes_min_',inter,".csv", sep=""), sep=',', row.names = FALSE, col.names = FALSE)
+ write.table(df_node_max %>% t(.) %>% data.frame(.) %>% .[,-1] %>% .[.[,2] != 'Inf',] %>% .[.[,2] != '-Inf',], paste(path,'nodes/nodes_max_',inter,".csv", sep=""), sep=',', row.names = FALSE, col.names = FALSE)
+}
+
+# set up the publication function and export the filtered results
+
+interstadial <- function(inter,p) {
+ 
+ # export path
+ path <- paste("../Filter_Results/Filter_Results_",p,"/",sep="")
+ 
+ tbl <-
+  list.files(pattern = paste0(inter,".csv",sep="")) %>% 
+  map_df(~read_csv(.))
+ print(paste0(inter,".csv"))
+
+ publication(path,tbl,inter)
+}
+
+# separate the LGM file and the NGRIP/BlackSea files and set up the functions interstadial and publication
+
+VegPer_Results <- function (p,period,df_result_result){ 
+  
+  adress <- paste0("21Day_",p,"_Results",sep="")
+  
+  setwd(adress)
+  
+  if (p == "LGM"){
+    period <- list("21Day_LGM")
+  } 
+  print(p)
+  lapply(period,interstadial,p)
+  
+  setwd("../")
+}
+
+```
+
+---
+
+additional procedure to create plots using QGIS and Python:
+
+...
+
+---
+
+### Additional scripts
+
+---
+
+### plot_2x2.R
+
+> The resulting calculations of the vegetation period in the different time periods (GS-3 to GI-9), are being made visible using QGIS and are now compacted in R into a better overview with 2x2 images shown next to each other after export.
+
+Variables:
+
+*period_concat* : list of climatic periods of interest
+
+#### plot_2x2 Functions
+
+`print2x2`
+
+`plot2x2`
+
+#### Details plot_2x2 Functions
+
+The function `plot2x2` takes the parameters *period* and *season* and splits to either use the base data (LGM) and then use the results and then plot the images in the function `print2x2` or use the data from Black Sea / NGRIP and then use `print2x2` to build and export the images.
+
+`print2x2` image aspects are defined and images are placed in a two by two grid to give a better overview and easier comparison. The images are then exported with the correct names being linked from the base data.
+
+```{r, message=FALSE, eval=FALSE}
+
+# libraries for plot2x2.R
+
+library(tidyverse)
+library(dplyr)
+library(purrr)
+library(png)
+library(gridExtra)
+
+library(RStoolbox)
+
+library(raster)
+library(rgdal)
+
+# plotting the spatial data including the calculated arrows to show the green wave
+
+print2x2 <- function (period,parameter) {
+ print(paste(parameter,'_',period[[1]][1],'_min.png',sep=''))
+ print(paste(parameter,'_',period[[2]][1],'_min.png',sep=''))
+ 
+ im1 <- stack(paste('QGIS/',parameter,'_',period[[1]][1],'_min.png',sep=''))
+
+ im2 <- stack(paste('QGIS/',parameter,'_',period[[1]][1],'_max.png',sep=''))
+
+ im3 <- stack(paste('QGIS/',parameter,'_',period[[2]][1],'_min.png',sep=''))
+
+ im4 <- stack(paste('QGIS/',parameter,'_',period[[2]][1],'_max.png',sep=''))
+
+ plot_output_png <- grid.arrange(
+  ggRGB(img = im1,r=1,g=2,b=3,maxpixels = 2e+06) + ggtitle(paste(parameter,' ',period[[1]][1],' (spring)',sep='')) + xlab ("") + ylab ("") + guides(fill=FALSE) +
+   theme(axis.title=element_blank(),
+      axis.text=element_blank(),
+      axis.ticks=element_blank(),
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank()),
+  ggRGB(img = im2,r=1,g=2,b=3,maxpixels = 2e+06) + ggtitle(paste(parameter,' ',period[[1]][1],' (autumn)',sep='')) + xlab ("") + ylab ("") + guides(fill=FALSE) +
+   theme(axis.title=element_blank(),
+      axis.text=element_blank(),
+      axis.ticks=element_blank(),
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank()), 
+  ggRGB(img = im3,r=1,g=2,b=3,maxpixels = 2e+06) + ggtitle(paste(parameter,' ',period[[2]][1],' (spring)',sep='')) + xlab ("") + ylab ("") + guides(fill=FALSE) +
+   theme(axis.title=element_blank(),
+      axis.text=element_blank(),
+      axis.ticks=element_blank(),
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank()),
+  ggRGB(img = im4,r=1,g=2,b=3,maxpixels = 2e+06) + ggtitle(paste(parameter,' ',period[[2]][1],' (autumn)',sep='')) + xlab ("") + ylab ("") + guides(fill=FALSE) +
+   theme(axis.title=element_blank(),
+      axis.text=element_blank(),
+      axis.ticks=element_blank(),
+      panel.grid.major = element_blank(), 
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank()),
+  ncol=2)
+ 
+ # output as png
+
+ plot_output <- paste('2x2/',parameter,'/',period[[1]][1],'_',period[[2]][1],'.png', sep='')
+ ggsave(plot_output, plot_output_png, device = png(), units = c("cm"), dpi = 1200, width=25, height=16)
+ while (!is.null(dev.list()))  dev.off()
+}
+
+# start the print2x2 function to plot the QGIS images
+
+plot_2x2 <- function(parameter,period){
+ 
+ if (parameter == "LGM"){
+  print2x2 (list('21Day','21Day'),parameter)
+  
+ }else{
+  lapply(period,parameter,print2x2)
+  
+ }
+}
+
+
+```
+
+---
+
+## Notes
+
+Please cite the use of this script as:
