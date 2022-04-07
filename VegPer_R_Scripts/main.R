@@ -93,28 +93,7 @@ lapply (parameter,VegPer_Results,period,df_result_result) # function to filter t
 ############################################################################################
 # create the plots with Python and QGIS
 
-##############################################
-# plot_2x2
 
-period_concat <- list(list("GS-3", "GI-3"),list("GS-4", "GI-4"), list("GS-5.1", "GI-5.1"),list("GS-5.2", "GI-5.2"), 
-                      list("GS-6", "GI-6"),list("GS-7", "GI-7"), list("GS-8", "GI-8"),    list("GS-9", "GI-9")) 
-
-setwd("../")
-setwd("VegPer_QGIS/extdata")
-lapply (parameter,plot_2x2,period_concat)
-
-
-# Python
-
-library(reticulate)
-use_python("C:/Program Files/QGIS 3.10/apps/Python37")
-#C:\Program Files\GDAL
-Sys.setenv(RETICULATE_PYTHON = "C:/Program Files/QGIS 3.10/apps/Python37")
-getwd()
-setwd("../")
-setwd("VegPer_QGIS/")
-reticulate::py_discover_config(required_module = "gdal")
-source_python("Froot_Loops_QGIS_3.py")
 
 
 

@@ -16,6 +16,20 @@ library(RStoolbox)
 library(raster)
 library(rgdal)
 
+setwd("../")
+setwd("VegPer_QGIS/extdata")
+
+
+# global parameter: 
+parameter <- c("BlackSea" ,"NGRIP", "LGM") #name of the period data sets  
+
+# list of stadial and interstadial climatic periods of interest
+period <- c("GS-3", "GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
+            "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9") 
+
+period_concat <- list(list("GS-3", "GI-3"),list("GS-4", "GI-4"), list("GS-5.1", "GI-5.1"),list("GS-5.2", "GI-5.2"), 
+                      list("GS-6", "GI-6"),list("GS-7", "GI-7"), list("GS-8", "GI-8"),    list("GS-9", "GI-9")) # climatic periods of interest
+
 # plotting the spatial data including the calculated arrows to show the green wave
 
 print2x2 <- function (period,parameter) {
@@ -79,3 +93,5 @@ plot_2x2 <- function(parameter,period){
 		
 	}
 }
+
+lapply (parameter,plot_2x2,period_concat)

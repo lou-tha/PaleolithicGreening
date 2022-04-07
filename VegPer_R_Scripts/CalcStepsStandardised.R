@@ -11,7 +11,7 @@
 
 #stepping_stone (package) 
 
-stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, step,step_day_size,p){
+stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step,step_day_size,p){
   
   tbl <-
     list.files(pattern = paste (csv_file,".csv", sep= '')) %>% 
@@ -22,9 +22,7 @@ stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, st
   
   temp_data <- tbl 
   
-  
-  #long_bottom = 20, long_top = 60, lati_west = 47.5, lati_east = 65, step = 2.5
-  #long_west = 20, long_east = 60, lat_bottom = 47.5, lat_top = 65, step = 2.5 ################
+  #long_west = 20, long_east = 60, lati_bottom = 47.5, lati_top = 65, step = 2.5 
   
   VegPeriod_complete <- tbl[tbl$Veg.21Day == 1,]
   df_result <- data.frame(c("a","b","c","d","e","f","g","h"))
@@ -33,12 +31,12 @@ stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, st
   text =''
   
   # calculation of the min, max, sum and mean of DOY and sum of temperatures
-  for (long in seq(from = long_bottom, to = long_top, step)){ # runs through every longitude
+  for (long in seq(from = long_west, to = long_east, step)){ # runs through every longitude
     
     #calculation of the vegetation change and the route of transmission of the fauna
     
     #migration in the spring
-    for (lat in seq(from = lati_west, to = lati_east, step)){ # runs through every latitude
+    for (lat in seq(from = lati_bottom, to = lati_top, step)){ # runs through every latitude
       result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] #filtering point
       data <- min(result$DOY, na.rm=T) 
       for (xlong in seq(from = -step, to = step, step)){ 
