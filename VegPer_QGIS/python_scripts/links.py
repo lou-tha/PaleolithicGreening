@@ -148,7 +148,7 @@ def reduce_resolution (name, x):
 for i in ['LGM','BlackSea','NGRIP']:#,
     for j in ['min','max']:
         if i == 'LGM':
-            k = '21Day'
+            k = '21Day_LGM'
             name = i + '_' + k + '_' + j #"GS-3_min_QGIS_second"
             csvFile = "../VegPer_Results/Calc_Step_Results/Calc_Step_" + i + "/" + name + ".csv"
             export_path = i + "/" + name

@@ -106,7 +106,7 @@ for i in ['LGM','BlackSea','NGRIP']:#,:
             layoutname = 'Froot_Loops max'
         
         if i == 'LGM':
-            k = '21Day'
+            k = '21Day_LGM'
            
             node = "nodes_" + i + "_" + k + '_' + j
             link =  i + "_" + k + '_' + j

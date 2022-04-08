@@ -1,6 +1,7 @@
 #import geopandas as gpd
 from qgis.core import QgsVectorFileWriter
 import gdal , ogr
+import inspect
 
 def create_point_shape (csvFile, name, min_max):
     #source_ds = ogr.Open(csvFile)
@@ -91,7 +92,7 @@ rel_path = os.path.dirname(os.path.dirname(os.path.abspath(filename)))
 for i in ['BlackSea','NGRIP','LGM']:
     for j in ['min','max']:
         if i == 'LGM':
-            k = '21Day'
+            k = '21Day_LGM'
             
             
             
