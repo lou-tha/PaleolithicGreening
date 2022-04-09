@@ -125,7 +125,7 @@ To define and edit the coordinates as well as the distance between the coordinat
   
 ---
 
-```{r, message=FALSE, warning=FALSE, error=FALSE, eval=FALSE}
+```R
 
 #libraries
 
@@ -231,7 +231,7 @@ With `calc_21` the start and end of the vegetation period is calculated. We have
 
 The function `period_correction` uses the base data (LGM), which has the calculated mean temperature, and sorts the data to show if the mean temperature is above or below 5 degrees Celsius. It is sorted by depicting either a 1 (if temperature is over 5 degrees) or 0 (if temperature is below 5 degrees) into the column *Veg*. The function also adds the period correction factor data (period_correction) from NGRIP and Black Sea to the base data (LGM). Afterwards the `calc_21` function is used to sort and show the vegetation period of the new data with the added season factors.
 
-```{r, message=FALSE, eval=FALSE}
+```R
 
 # generate the vegetation period for LGM
 
@@ -250,7 +250,7 @@ calc_21 <- function (LGM_temp) {
   
   if(sum(test1$Veg == 1) == 21 || sum(test2$Veg == 1) == 21){ 
    LGM_temp[i,]$Veg.21Day = 1
-  }else { # 
+  }else { 
    LGM_temp[i,]$Veg.21Day = 0 
   }
   
@@ -356,7 +356,7 @@ The function `stepping` calculates the vegetation change and the route of transm
 
 To define the coordinate nodes and step directions for the images in QGIS the function `QGIS_ID` sets up the calculation for ID points.
 
-```{r, message=FALSE, eval=FALSE}
+```R
 
 # calculate the vegetation change and the route of transmission in spring and autumn
 
@@ -516,9 +516,9 @@ The function `publication` also creates the nodes, which are used for the steppi
 
 The function `interstadial` sets up the `publication` script and uses the filtered and compacted data to export the filtered results of each period.
 
-```{r, message=FALSE, eval=FALSE}
+```R
 
-#
+# filter the vegetation period data to show start day, end day, sum of vegetation days and sum of temperature
 
 publication <- function (path,tbl,inter) { 
  
@@ -1129,7 +1129,7 @@ The function `plot2x2` takes the parameters *period* and *season* and splits to 
 
 `print2x2` image aspects are defined and images are placed in a two by two grid to give a better overview and easier comparison. The images are then exported with the correct names being linked from the base data.
 
-```{r, message=FALSE, eval=FALSE}
+```R
 
 # libraries for plot2x2.R
 
