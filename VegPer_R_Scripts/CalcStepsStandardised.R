@@ -11,7 +11,7 @@
 
 #stepping_stone (package) 
 
-stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step,step_day_size,p){
+stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step, step_day_size, p){
   
   tbl <-
     list.files(pattern = paste (csv_file,".csv", sep= '')) %>% 

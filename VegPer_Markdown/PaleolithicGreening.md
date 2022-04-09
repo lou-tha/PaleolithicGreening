@@ -14,7 +14,17 @@
 
 ## Workflow
 
-To start, open the main.R script, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the funcions and script, check the folder VegPer_Results (see section folder structure) and view the created csv files. Depending on the computer this code runs on and the number of data that is used, the results can appear after a while.
+To start, open the **main.R** script in the VegPer_R_Scripts folder, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the funcions and script, check the folder **VegPer_Results** (see section folder structure) and view the created csv files. Depending on the computer this code runs on and the number of data that is used, the results can appear after a while.
+
+To see the vegetation period pull factors in a geographical context, the next step is to open the **PaleolithicGreeningQGIS.qgz** file with QGIS (3.10). Select the Python Console once your QGIS file has opened. Next click on the notepad with pen icon to show the Python editor. If the Python files are not visible, go to the folder symbol to open the Python scripts nodes.py, links.py and print.py (see folder structure below). Select the nodes layer in the layer browser to the left, then run the nodes.py script. Repeat with the links.py script (select the layer and run the script). The last step in QGIS is to run the print.py script. Nothing has to be selected, just run the Python script and the resulting vegetation period pull factor images will be exported to the folder extdata/QGIS.
+
+To get a better overview and be able to compare the pull factors of spring and fall in each period, use the **plot_2x2.R** script. This will combine the single plot images, that were exported from QGIS. Open the R script, select all and press run. The results can be fund in the folder extdata/2x2.
+
+---
+
+## Notes
+
+Please cite the use of this script as:
 
 ---
 
@@ -74,18 +84,21 @@ To define and edit the coordinates as well as the distance between the coordinat
   * VegPer_Base_Data/QGIS_ID_File.xlsx
 
 * QGIS
-  * pycache (Folder)
-  * exdata (Folder)
-  * froot_loops_layout_temp.qpt
-  * Froot_Loops_QGIS_3_layout.qgz
-  * geographical_data (Folder)
-  * layout_data (Folder)
-  * link_node_data (Folder)
-  * links (Folder)
-  * python_scripts (Folder)
-  * rasterfiles (Folder)
-  * sites (Folder)
-  * VegPer_layout.qgz
+  * pycache
+  * exdata (Result Images from plotting the Vegetation Period in QGIS)
+    * 2x2
+    * QGIS
+  * geographical_data (QGIS geographical layers)
+  * layout_data (QGIS symbology and layout files)
+  * link_node_data (QGIS node files)
+  * links (QGIS link files for all parameters - LGM, BlackSea, NGRIP)
+  * python_scripts
+    * nodes.py
+    * links.py
+    * print.py
+  * rasterfiles (Elevation map)
+  * sites (archaeological sites)
+  * PaleolithicGreeningQGIS.qgz
 
 * Scripts
   * main.R
@@ -193,27 +206,6 @@ lapply (parameter,VegPer_Results,period,df_result_result)
 
 
 #### create the plots with Python and QGIS ####
-
-
-### plot_2x2
-
-period_concat <- list(list("GS-3", "GI-3"),list("GS-4", "GI-4"), list("GS-5.1", "GI-5.1"),list("GS-5.2", "GI-5.2"), list("GS-6", "GI-6"),list("GS-7", "GI-7"), list("GS-8", "GI-8"), list("GS-9", "GI-9")) 
-
-
-setwd("extdata")
-lapply (parameter,plot_2x2,period_concat)
-
-
-### Python ###
-
-library(reticulate)
-use_python("C:/Program Files/QGIS 3.10/apps/Python37")
-#C:\Program Files\GDAL
-Sys.setenv(RETICULATE_PYTHON = "C:/Program Files/QGIS 3.10/apps/Python37")
-getwd()
-setwd("VegPer_QGIS/")
-reticulate::py_discover_config(required_module = "gdal")
-source_python("Froot_Loops_QGIS_3.py")
 
 ```
 
@@ -368,7 +360,7 @@ To define the coordinate nodes and step directions for the images in QGIS the fu
 
 # calculate the vegetation change and the route of transmission in spring and autumn
 
-stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, step,step_day_size,p){
+stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step, step_day_size, p){
 
   tbl <-
     list.files(pattern = paste (csv_file,".csv", sep= '')) %>% 
@@ -379,8 +371,7 @@ stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, st
   
   temp_data <- tbl
   
-  #long_bottom = 20, long_top = 60, lati_west = 47.5, lati_east = 65, step = 2.5
-  #lat_bottom = 47.5, lat_top = 65, long_west = 20, long_east = 60, step = 2.5
+  #long_west = 20, long_east = 60, lati_bottom = 47.5, lati_top = 65, step = 2.5 
   
   VegPeriod_complete <- tbl[tbl$Veg.21Day == 1,]
   df_result <- data.frame(c("a","b","c","d","e","f","g","h"))
@@ -390,12 +381,12 @@ stepping <- function  (csv_file, long_bottom, long_top, lati_west, lati_east, st
   
   # calculation of the min, max, sum and mean of DOY and sum of temperatures
 
-  for (long in seq(from = long_bottom, to = long_top, step)){ # runs through every longitude
+  for (long in seq(from = long_west, to = long_east, step)){ # runs through every longitude
     
     #calculation of the vegetation change and the route of transmission of the fauna 
     
     # migration in spring
-    for (lat in seq(from = lati_west, to = lati_east, step)){ # runs through every latitude
+    for (lat in seq(from = lati_bottom, to = lati_top, step)){ # runs through every latitude
       result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] #filtering point
       data <- min(result$DOY, na.rm=T) 
       for (xlong in seq(from = -step, to = step, step)){ 
@@ -622,13 +613,499 @@ VegPer_Results <- function (p,period,df_result_result){
 
 ---
 
-additional procedure to create plots using QGIS and Python:
+**additional procedure to create plots using QGIS and Python:**
 
-...
+* Open the PaleolithicGreeningQGIS.qgz file with QGIS (3.10)
+* Select the Python Console once your QGIS file has opened
+* Click on the notepad with pen icon to show the Python editor
+* Open the Python scripts nodes.py, links.py and print.py
+* Select the nodes layer in the layer browser to the left, then run the nodes.py script
+* Repeat with the links.py script (select the layer and run the script)
+* The last step in QGIS is to run the print.py script
+* The resulting vegetation period pull factor images will be exported to the folder extdata/QGIS
 
 ---
 
-### Additional scripts
+### nodes.py
+
+> This Python script goes over all start and end dates of each vegetation period of all time periods and parameters (LGM, BlackSea and NGRIP) and proceeds to place defined symbols on each node/coordinate that shows a vegetation period. For the data used in this case, the start of the vegetation period goes from 100 - 210 DOY (Day of the Year), the end of the vegetation period goes from 200 - 320 DOY.
+
+#### nodes.py code
+
+```python
+
+#import geopandas as gpd
+from qgis.core import QgsVectorFileWriter
+import gdal , ogr
+import inspect
+
+def create_point_shape (csvFile, name, min_max):
+    #source_ds = ogr.Open(csvFile)
+    #layer = source_ds.GetLayer()
+    
+    layer = QgsVectorLayer(csvFile, name, "ogr")#, 'memory') 
+    
+    #prov = layer.dataProvider()
+
+    #prov.addAttributes([QgsField("ID",QVariant.Double),QgsField("DOY",QVariant.Double),QgsField("LAT",QVariant.Double),QgsField("LONG",QVariant.Double),QgsField("MAX",QVariant.Double),QgsField("QGIS_ID",QVariant.Double)]) 
+    #layer.updateFields()
+    #print (layer.fields().names())
+    #print(csvFile)
+    # add layer to the map
+    QgsProject.instance().addMapLayer(layer)
+    '''
+    # open the csv-file for reading and skip the header row
+    lineStrings = open(csvFile, encoding="utf-8")
+    print(q.decode())
+    next(lineStrings)
+
+    # start editing
+    layer.startEditing()
+
+    # loop over the lines, split them into 4 coordinates, build points from pairs of
+    # them, and connect the pair of points 
+    feats = []
+
+
+
+    for line in lineStrings:
+        line = re.sub("['\"]",'',line)
+        lineStringAsList = line.split(",")
+        
+        from_node = QgsPoint(float(lineStringAsList[0]),float(lineStringAsList[1]))
+        to_node = QgsPoint(float(lineStringAsList[2]),float(lineStringAsList[3]))
+        feat = QgsFeature()
+        fields = QgsFields()
+        feat.setFields(fields)
+
+        feat.setAttributes([float(i) for i in lineStringAsList[4:8]])
+        feat.setGeometry(QgsGeometry.fromPolyline([from_node, to_node]))
+        #feat['point_id']="Start Point"
+        #feat.setAttribute (float(lineStringAsList[4]))
+        feats.append(feat)
+
+    # finally add all created features and save edits
+    prov.addFeatures(feats)
+    layer.updateExtents()
+    '''
+    styling_nodes (layer, min_max)
+    
+    #export_layout()
+    layer.commitChanges()
+    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(False)
+
+
+def styling_nodes (layer, min_max):
+    dir = 'layout_data/'
+    #renderer = layer.renderer().QgsGraduatedSymbolRenderer
+
+    
+    if min_max == 'min':
+        print(1)
+        layer.loadNamedStyle(dir + 'standardised_style_nodes_min.qml')
+        layer.triggerRepaint()
+        
+    else:
+        print(1)
+        layer.loadNamedStyle(dir + 'standardised_style_nodes_max.qml')
+        layer.triggerRepaint()
+    
+    layer.reload()
+    renderer = layer.renderer()
+    
+    #renderer.setMode(QgsGraduatedSymbolRendererV2.Quantile)
+   #renderer.updateClasses(layer,renderer.Quantile,5)
+    #renderer.updateRangeLabels() 
+    #iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
+    layer.reload() 
+    #renderer.updateClasses(layer,renderer.Quantile,9)
+    iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
+    
+filename = inspect.getframeinfo(inspect.currentframe()).filename
+rel_path = os.path.dirname(os.path.dirname(os.path.abspath(filename)))
+
+
+for i in ['BlackSea','NGRIP','LGM']:
+    for j in ['min','max']:
+        if i == 'LGM':
+            k = '21Day_LGM'
+            
+            
+            
+            path = "file:///" + rel_path + "/VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".csv"
+            uri = path + "?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s&useHeader=%s" % ("UTF-8",",", "LONG", "LAT","epsg:4326","yes")
+            
+            name = "nodes_" + i + "_" + k + '_' + j 
+            vlayer = QgsVectorLayer(uri, name, 'delimitedtext')
+            #print(vlayer.isValid())
+            print (name) 
+            #iface.addVectorLayer(uri, name,'delimitedtext')
+            path = "../VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".shp"
+            QgsVectorFileWriter.writeAsVectorFormat(vlayer, path, "UTF-8", vlayer.crs(), "ESRI Shapefile") 
+            
+            create_point_shape (path, name, j)
+            
+        else:
+            for k in ["GS-3","GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
+                "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9"]:
+            
+                path = "file:///" + rel_path + "/VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".csv"
+                uri = path + "?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s&useHeader=%s" % ("UTF-8",",", "LONG", "LAT","epsg:4326","yes")
+                
+                name = "nodes_" + i + "_" + k + '_' + j 
+                vlayer = QgsVectorLayer(uri, name, 'delimitedtext')
+                #print(vlayer.isValid())
+
+                #iface.addVectorLayer(uri, name,'delimitedtext')
+                path = "../VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".shp"
+                QgsVectorFileWriter.writeAsVectorFormat(vlayer, path, "UTF-8", vlayer.crs(), "ESRI Shapefile") 
+                
+                create_point_shape (path, name, j)
+
+```
+
+---
+
+### links.py
+
+>The links.py script calculates and shows the strength of the green wave and the pull factors for each period and parameter (LGM, BlackSea and NGRIP). The layout and symbology are defined to show the strength of the green wave by displaying different shades of green to show the difference between the starting or endpoints of the vegetation period between each node. The difference in days bewteen the vegetation periods from the nearest coordinates are in this case from 2 days to 50 days.
+
+#### links.py script
+
+```python
+
+import re
+
+import gdal , ogr
+import pandas as pd
+import numpy as np
+import os, sys
+import qgis.utils
+
+#from Froot_Loops_QGIS_print import *
+
+def create_line_model (csvFile,name,export_path):
+    
+    # create an empty memory layer for polylines
+    layer = QgsVectorLayer('LineString?crs=EPSG:4326', name, 'memory')
+    #print(vlayer.isValid())
+
+    prov = layer.dataProvider()
+    prov.addAttributes([QgsField("total_number_days",QVariant.Double),QgsField("limit_of_days",QVariant.Double),QgsField("ID_source",QVariant.Double),QgsField("ID_target",QVariant.Double)]) 
+    layer.updateFields()
+    print (layer.fields().names())
+    # add layer to the map
+    QgsProject.instance().addMapLayer(layer)
+
+    # open the csv-file for reading and skip the header row
+    lineStrings = open(csvFile, "rU")
+
+    next(lineStrings)
+
+    # start editing
+    layer.startEditing()
+
+    # loop over the lines, split them into 4 coordinates, build points from pairs of
+    # them, and connect the pair of points 
+    feats = []
+
+
+
+    for line in lineStrings:
+        line = re.sub("['\"]",'',line)
+        lineStringAsList = line.split(",")
+        
+        from_node = QgsPoint(float(lineStringAsList[0]),float(lineStringAsList[1]))
+        to_node = QgsPoint(float(lineStringAsList[2]),float(lineStringAsList[3]))
+        feat = QgsFeature()
+        fields = QgsFields()
+        feat.setFields(fields)
+
+        feat.setAttributes([float(i) for i in lineStringAsList[4:8]])
+        feat.setGeometry(QgsGeometry.fromPolyline([from_node, to_node]))
+        #feat['point_id']="Start Point"
+        #feat.setAttribute (float(lineStringAsList[4]))
+        feats.append(feat)
+
+    # finally add all created features and save edits
+    prov.addFeatures(feats)
+    layer.updateExtents()
+    
+    styling (layer)
+    #export_layout()
+    layer.commitChanges()
+    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(False)
+
+    path = "C:/Users/SFB 806/Documents/GitHub/Vegetation_Period_Data/VegPer_QGIS/links/" + export_path +  name + ".shp"
+    QgsVectorFileWriter.writeAsVectorFormat(layer, path, "UTF-8", layer.crs(), "ESRI Shapefile") 
+    
+    
+    #QgsProject.instance().removeMapLayers( [vl.id()] )
+    
+def styling (layer):
+    #layer = iface.activeLayer()
+    #layer.geometryType() == QGis.Point:
+    dir = 'layout_data/'
+    #renderer = layer.renderer().QgsGraduatedSymbolRenderer
+    
+    layer.loadNamedStyle(dir + 'standardised_style_4.qml')
+    layer.triggerRepaint()
+    #renderer = layer.renderer()
+    #print("Type:", renderer.type())
+    
+    
+    #renderer.updateClasses(layer,renderer.Quantile,9)
+    #renderer.updateRangeLabels() 
+    iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
+    layer.reload() 
+    
+
+def plotting_export_png ():
+    export_layout()
+
+
+def reduce_resolution (name, x):
+    #try:
+    os.chdir('rasterfiles/')
+    print(name)
+    in_ds = gdal.Open(name)
+    out_ds = 'reduced/' + x + name 
+    
+    in_band = in_ds.GetRasterBand(1)
+    myarray = np.array(in_band.ReadAsArray())
+    
+    limit = 8
+    
+    x = in_band.XSize - (in_band.XSize % limit) 
+    y = in_band.YSize - (in_band.YSize % limit)  
+
+    '''if x < 100 or y < 100:
+        resolution = x,y
+    else:'''
+    if in_band.XSize % limit > 0 and in_band.YSize % limit > 0:
+            resolution = (x /limit +1, y/limit+1)
+    elif in_band.YSize % limit > 0:
+        resolution =  in_band.XSize/limit, y/limit +1
+    elif in_band.XSize % limit > 0:
+        resolution = x/limit +1, in_band.YSize / limit
+    else:
+        resolution = (in_band.XSize / limit), (in_band.YSize / limit)
+        
+
+    gtiff_driver = gdal.GetDriverByName('GTIFF')
+    dst_ds = gtiff_driver.Create(out_ds,
+                           int(resolution[0]),
+                           int(resolution[1]),
+                           1,
+                           gdal.GDT_Float64)
+
+
+    dst_ds.GetRasterBand(1).SetNoDataValue(0)
+
+    dst_ds.SetProjection(in_ds.GetProjection())
+    geotransform = list(in_ds.GetGeoTransform())
+    geotransform [1] *= limit
+    geotransform [5] *= limit
+    dst_ds.SetGeoTransform(geotransform)
+    myarray = in_band.ReadAsArray(buf_xsize=int(resolution[0]), buf_ysize= int(resolution[1]))
+    
+    myarray [myarray < 0] = 0
+    out_band = dst_ds.GetRasterBand(1)
+    out_band.WriteArray(myarray)
+
+    #except:
+    print('ohoh')
+    in_ds = None
+    dst_ds = None
+    
+    
+  
+    
+for i in ['LGM','BlackSea','NGRIP']:#,
+    for j in ['min','max']:
+        if i == 'LGM':
+            k = '21Day_LGM'
+            name = i + '_' + k + '_' + j #"GS-3_min_QGIS_second"
+            csvFile = "../VegPer_Results/Calc_Step_Results/Calc_Step_" + i + "/" + name + ".csv"
+            export_path = i + "/" + name
+            create_line_model (csvFile,name,export_path)
+        else:
+            for k in ["GS-3","GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
+                "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9"]:
+                
+                # specify your csv-file
+                name = i + '_' + k + '_' + j #"GS-3_min_QGIS_second"
+                csvFile = "../VegPer_Results/Calc_Step_Results/Calc_Step_" + i + "/" + name + ".csv"
+                export_path = i + "/" + name
+                create_line_model (csvFile,name,export_path)
+    
+#printpdfmulti("Froot_Loops")    
+
+'''
+import os
+
+directory_in_str = 'F:/Aster' # + ASTGTMV003_N58E018_dem
+
+directory = os.fsencode(directory_in_str)
+    
+for file in os.listdir(directory):
+     filename = os.fsdecode(file)
+     print(filename)
+     
+     if filename.endswith(".tif"): 
+         # print(os.path.join(directory, filename))
+         reduce_resolution(filename, 'reduced_')
+         #break
+         continue
+     else:
+         continue
+    
+'''
+
+```
+
+---
+
+### print.py
+
+> Running the print.py script, allows QGIS to combine the layers, that have been collected through the nodes.py script and the links.py script, and give these images a legend and a title. Through the print.py script the images now show the pull factors and the strength of the green wave for each period and parameter (LGM, BlackSea and NGRIP). The images are exported and can be found in the folder VegPer_QGIS/extdata/QGIS.
+
+#### print.py script
+
+```python
+
+#!/usr/bin/env python3
+import os
+from qgis.core import (QgsProject, QgsLayoutExporter, QgsApplication)
+import qgis.utils
+
+def export_layout():
+    QgsApplication.setPrefixPath("extdata/QGIS", True)
+
+    gui_flag = False
+    app = QgsApplication([], gui_flag)
+
+    app.initQgis()
+
+    project_path = os.getcwd() + '/Froot_Loops_QGIS_3.qgz'
+
+    project_instance = QgsProject.instance()
+    project_instance.setFileName(project_path)
+    project_instance.read()
+
+    manager = QgsProject.instance().layoutManager()
+    layout = manager.layoutByName("Froot_Loops") # name of the layout
+    # or layout = manager.layouts()[0] # first layout
+
+    exporter = QgsLayoutExporter(layout)
+    exporter.exportToPdf(project_instance.absolutePath() + "/extdata/QGIS/layout.png",
+                         QgsLayoutExporter.PdfExportSettings())
+
+    app.exitQgis()
+    
+    
+    
+    
+
+def printpdfmulti(layoutname,link,node):
+    for i in range(1):
+        #selected_layers = qgis.utils.iface.layerTreeView().selectedLayers()
+        projectInstance = QgsProject.instance()
+        #projectInstance_2 = QgsProject.instance()
+        layoutmanager = projectInstance.layoutManager()
+        layout = layoutmanager.layoutByName(layoutname)
+         #Layout nameprojectInstance = QgsProject.instance()
+        
+        
+
+        #QgsProject.instance().layerTreeRoot().findLayer(layer.name('cut_n30e030_reduced')).setItemVisibilityChecked(True)
+        #QgsProject.instance().layerTreeRoot().findLayer(layer.name('cut_n30e060_reduced')).setItemVisibilityChecked(True)
+        #QgsProject.instance().layerTreeRoot().findLayer(layer.name('cut_n30e000_reduced')).setItemVisibilityChecked(True)
+        #QgsProject.instance().layerTreeRoot().findLayer(layer.name('aster_reduced')).setItemVisibilityChecked(True)
+        
+        link_node (layout,link,node,projectInstance)
+
+        print(1)
+        del projectInstance, layout
+
+def link_node (layout,link,node,projectInstance):
+    print (link)
+    print (node)
+    node_layer = projectInstance.mapLayersByName(str(node))[0]
+    link_layer = projectInstance.mapLayersByName(str(link))[0]
+
+    QgsProject.instance().layerTreeRoot().findLayer(node_layer.id()).setItemVisibilityChecked(True)
+    QgsProject.instance().layerTreeRoot().findLayer(link_layer.id()).setItemVisibilityChecked(True)
+    #iface.layerTreeView().refreshLayerSymbology(node_layer.id())
+    #iface.layerTreeView().refreshLayerSymbology(link_layer.id())
+    #iface.layerTreeView().layerTreeRoot().findLayer(link_layer.id()).refreshItems()
+    #iface.layerTreeView().layerTreeModel().refreshLayerLegend(link_layer.id())
+    '''
+    layout_temp = layout
+    #legend = layout.selectedLayoutItems()
+    legend = QgsLayoutItemLegend(layout_temp)
+    layerTree = QgsLayerTree()
+    layerTree.addLayer(node_layer)
+    layerTree.addLayer(link_layer)
+    legend.model().setRootGroup(layerTree)
+    legend.refresh()
+    layout.addLayoutItem(legend)
+    layout.refresh()
+    
+    newFont = QFont("MS Shell Dlg 2", 8) 
+    legend.setStyleFont(QgsLegendStyle.SymbolLabel, newFont)
+    '''
+    
+    exporter = QgsLayoutExporter(layout)
+    exporter.exportToImage(path + '/' + link + ".png", QgsLayoutExporter.ImageExportSettings() )
+    QgsProject.instance().layerTreeRoot().findLayer(link_layer.id()).setItemVisibilityChecked(False)
+    QgsProject.instance().layerTreeRoot().findLayer(node_layer.id()).setItemVisibilityChecked(False)
+    
+    
+
+
+#for i in list(['cut_n30e030_reduced','cut_n30e060_reduced','cut_n30e000_reduced','aster_reduced','ice_sheet_interstadial','ice_sheet_LGM','world_rivers_dSe']):
+for i in list(['Elevation (m)','Ice sheet (interstadial)','Ice sheet (LGM)','Rivers']):
+        projectInstance = QgsProject.instance()
+        layer = projectInstance.mapLayersByName(i)[0]
+        QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(True)
+
+path = "extdata/QGIS"
+
+
+
+for i in ['LGM','BlackSea','NGRIP']:#,:
+    for j in ['min','max']:
+        if j == 'min':
+            layoutname = 'Froot_Loops min'
+        elif j == 'max':
+            layoutname = 'Froot_Loops max'
+        
+        if i == 'LGM':
+            k = '21Day_LGM'
+           
+            node = "nodes_" + i + "_" + k + '_' + j
+            link =  i + "_" + k + '_' + j
+            printpdfmulti(layoutname,link,node)
+        else:
+            #for k in ["GS-4"]:#
+            for k in ["GS-3","GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
+                "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9"]:
+            #for k in ["GI-3", "GS-4"]:
+                node = "nodes_" + i + "_" + k + '_' + j
+                link =  i + "_" + k + '_' + j
+                printpdfmulti(layoutname,link,node)
+                
+'''
+for i in list(['Elevation (m)','Ice sheet (interstadial)','Ice sheet (LGM)','Rivers']):
+    projectInstance = QgsProject.instance()
+    layer = projectInstance.mapLayersByName(i)[0]
+    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(False)
+    '''
+
+```
+
+### Additional script
 
 ---
 
@@ -734,9 +1211,3 @@ plot_2x2 <- function(parameter,period){
 
 
 ```
-
----
-
-## Notes
-
-Please cite the use of this script as:
