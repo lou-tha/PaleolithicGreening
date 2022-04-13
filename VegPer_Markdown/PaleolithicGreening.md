@@ -16,7 +16,7 @@
 
 To start, open the **main.R** script in the VegPer_R_Scripts folder, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the funcions and script, check the folder **VegPer_Results** (see section folder structure) and view the created csv files. Depending on the computer this code runs on and the number of data that is used, the results can appear after a while.
 
-To see the vegetation period pull factors in a geographical context, the next step is to open the **PaleolithicGreeningQGIS.qgz** file with QGIS (3.10). Select the Python Console once your QGIS file has opened. Next click on the notepad with pen icon to show the Python editor. If the Python files are not visible, go to the folder symbol to open the Python scripts nodes.py, links.py and print.py (see folder structure below). Select the nodes layer in the layer browser to the left, then run the nodes.py script. Repeat with the links.py script (select the layer and run the script). The last step in QGIS is to run the print.py script. Nothing has to be selected, just run the Python script and the resulting vegetation period pull factor images will be exported to the folder extdata/QGIS.
+To see the vegetation period pull factors in a geographical context, the next step is to open the **PaleolithicGreeningQGIS.qgz** file with QGIS (3.10). Select the Python Console once your QGIS file has opened. Next click on the notepad with pen icon to show the Python editor. If the Python files are not visible, go to the folder symbol to open the Python scripts links.py, nodes.py and print.py (see folder structure below). Select the links layer in the layer browser to the left, then run the links.py script. Repeat with the nodes.py script (select the nodes layer and run the script). The last step in QGIS is to run the print.py script. Nothing has to be selected, just run the Python script and the resulting vegetation period pull factor images will be exported to the folder extdata/QGIS.
 
 To get a better overview and be able to compare the pull factors of spring and fall in each period, use the **plot_2x2.R** script. This will combine the single plot images, that were exported from QGIS. Open the R script, select all and press run. The results can be fund in the folder extdata/2x2.
 
@@ -26,6 +26,59 @@ To get a better overview and be able to compare the pull factors of spring and f
 
 Please cite the use of this script as:
 
+---
+
+### Folder structure and contents
+
+> this folder structure has been built to clearly structure the data input and the results that are generated through this script.
+
+* Base Data:
+  * VegPer_Base_Data/LGM_Base_Data.csv
+  * VegPer_Base_Data/Period_BlackSea.csv
+  * VegPer_Base_Data/Period_NGRIP.csv
+  * VegPer_Base_Data/QGIS_ID_File.csv
+  * VegPer_Base_Data/QGIS_ID_File.xlsx
+
+* QGIS
+  * pycache
+  * exdata (Result Images from plotting the Vegetation Period in QGIS)
+    * 2x2
+    * QGIS
+  * geographical_data (QGIS geographical layers)
+  * layout_data (QGIS symbology and layout files)
+  * link_node_data (QGIS node files)
+  * links (QGIS link files for all parameters - LGM, BlackSea, NGRIP)
+  * python_scripts
+    * links.py
+    * nodes.py
+    * print.py
+  * rasterfiles (Elevation map)
+  * sites (archaeological sites)
+  * PaleolithicGreeningQGIS.qgz
+
+* Scripts
+  * main.R
+  * Calc21Day.R
+  * CalcStepsStandardised.R
+  * CalcFilter.R
+  * plot_2x2.R
+
+* Result Folder Structure
+  * VegPer_Results/21Day_BlackSea_Results
+  * VegPer_Results/21Day_LGM_Results
+  * VegPer_Results/21Day_NGRIP_Results
+  * VegPer_Results/Calc_Step_Results
+    * VegPer_Results/Calc_Step_Results/Calc_Step_BlackSea
+    * VegPer_Results/Calc_Step_Results/Calc_Step_LGM
+    * VegPer_Results/Calc_Step_Results/Calc_Step_NGRIP
+  * VegPer_Results/Filter_Results
+    * VegPer_Results/Filter_Results/Filter_Results_BlackSea
+      * VegPer_Results/Filter_Results/Filter_Results_BlackSea/nodes
+    * VegPer_Results/Filter_Results/Filter_Results_LGM
+      * VegPer_Results/Filter_Results/Filter_Results_LGM/nodes
+    * VegPer_Results/Filter_Results/Filter_Results_NGRIP
+      * VegPer_Results/Filter_Results/Filter_Results_NGRIP/nodes
+  
 ---
 
 ## **Code**
@@ -72,59 +125,6 @@ To define and edit the coordinates as well as the distance between the coordinat
 
 ---
 
-### Folder structure and contents
-
-> this folder structure has been built to clearly structure the data input and the results that are generated through this script.
-
-* Base Data:
-  * VegPer_Base_Data/LGM_Base_Data.csv
-  * VegPer_Base_Data/Period_BlackSea.csv
-  * VegPer_Base_Data/Period_NGRIP.csv
-  * VegPer_Base_Data/QGIS_ID_File.csv
-  * VegPer_Base_Data/QGIS_ID_File.xlsx
-
-* QGIS
-  * pycache
-  * exdata (Result Images from plotting the Vegetation Period in QGIS)
-    * 2x2
-    * QGIS
-  * geographical_data (QGIS geographical layers)
-  * layout_data (QGIS symbology and layout files)
-  * link_node_data (QGIS node files)
-  * links (QGIS link files for all parameters - LGM, BlackSea, NGRIP)
-  * python_scripts
-    * nodes.py
-    * links.py
-    * print.py
-  * rasterfiles (Elevation map)
-  * sites (archaeological sites)
-  * PaleolithicGreeningQGIS.qgz
-
-* Scripts
-  * main.R
-  * Calc21Day.R
-  * CalcStepsStandardised.R
-  * CalcFilter.R
-  * plot_2x2.R
-
-* Result Folder Structure
-  * VegPer_Results/21Day_BlackSea_Results
-  * VegPer_Results/21Day_LGM_Results
-  * VegPer_Results/21Day_NGRIP_Results
-  * VegPer_Results/Calc_Step_Results
-    * VegPer_Results/Calc_Step_Results/Calc_Step_BlackSea
-    * VegPer_Results/Calc_Step_Results/Calc_Step_LGM
-    * VegPer_Results/Calc_Step_Results/Calc_Step_NGRIP
-  * VegPer_Results/Filter_Results
-    * VegPer_Results/Filter_Results/Filter_Results_BlackSea
-      * VegPer_Results/Filter_Results/Filter_Results_BlackSea/nodes
-    * VegPer_Results/Filter_Results/Filter_Results_LGM
-      * VegPer_Results/Filter_Results/Filter_Results_LGM/nodes
-    * VegPer_Results/Filter_Results/Filter_Results_NGRIP
-      * VegPer_Results/Filter_Results/Filter_Results_NGRIP/nodes
-  
----
-
 ```R
 
 #libraries
@@ -157,9 +157,9 @@ for (p in parameter){
   dir.create(file.path(paste0('VegPer_Results/Filter_Results')), 
   showWarnings = FALSE)
   dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p)), 
-  showWarnings = FALSE) 
-  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p,'/nodes')), 
   showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',
+  p,'/nodes')), showWarnings = FALSE)
 }
 
 # input files
@@ -213,7 +213,7 @@ lapply (parameter,VegPer_Results,period,df_result_result)
 
 ### Calc21Day.R
 
-> The base temperature LGM (last glacial maximum) data is used to calculate the vegetation period during the LGM and between stadial periods (GS-3 until GS-9) as well as interstadial periods (GI-3 until GI-9). Two different period correction factor tables are used, which calculate the vegetation period with NGRIP data and with Black Sea data in the LGM and stadial/interstadial periods. The temperature data is then filtered to display the vegetation period of each time period. First the mean of 3 temperatures has to be equal or above 5 degrees Celsius. The temperature data is then filtered and shows each day, that has a mean temperature >= 5 °C. The vegetation period start and end is defined as 21 consecutive days with a mean temperature of equal or above 5 degrees Celsius. The new temperature data is filtered and shows the start and end of the vegetation periods for every time period.
+> The base temperature LGM (last glacial maximum) data is used to calculate the vegetation period during the LGM and between stadial periods (GS-3 until GS-9) as well as interstadial periods (GI-3 until GI-9). Two different period correction factor tables are used, which calculate the vegetation period with NGRIP data and with BlackSea data in the LGM and stadial/interstadial periods. The temperature data is then filtered to display the vegetation period of each time period. First the mean of 3 temperatures has to be equal or above 5 degrees Celsius. The temperature data is then filtered and shows each day, that has a mean temperature of >= 5 °C. The vegetation period start and end is defined as 21 consecutive days with a mean temperature of equal or above 5 degrees Celsius. The new temperature data is filtered and shows the start and end of the vegetation periods for every time period.
 
 #### Calc21Day Functions
 
@@ -225,11 +225,11 @@ lapply (parameter,VegPer_Results,period,df_result_result)
 
 #### Details Calc21Day Functions
 
-The function `Day_21` sets up the basic calculation and code for the vegetation period data. The base LGM (last glacial maximum) data shows the temperature each day of the year (*Temp*) as well as the mean temperature in another column (*Temp_mean*). This file is imported and renamed **LGM_temp** to work with and and change the file, without corrupting the main data file. The function `Day_21` sets up the calculation of the base LGM data first, to have **LGM_temp** run through the `calc_21` function and afterwards use the calculated Vegetation data for LGM to then add the season factors (`period_correction` function) to calculate the vegetation periods for the defined interstadial and stadial time periods.
+The function `Day_21` sets up the basic calculation and code for the vegetation period data. The base LGM (last glacial maximum) data shows the temperature each day of the year (*Temp*) as well as the mean temperature in another column (*Temp_mean*). This file is imported and renamed **LGM_temp** to work with and and change the file, without corrupting the main data file. The function `Day_21` sets up the calculation of the base LGM data first, to have **LGM_temp** run through the `calc_21` function and afterwards use the calculated vegetation data for LGM to then add the period correction factors (`period_correction` function) to calculate the vegetation periods for the defined interstadial and stadial time periods.
 
 With `calc_21` the start and end of the vegetation period is calculated. We have set the start and end of the vegetation period as 21 days of consecutive temperatures above 5 degrees Celsius. `calc_21` uses two subsets which define if the mean temperature was above or below 5 degrees Celsius for 21 consecutive days before or after the currently checked Day of Year. The function runs trough the column *Veg* of the sorted data (LGM_temp) and shows the vegetation period of a temperature mean of 5 degrees Celsius for at least 21 consecutive days by depicting either a 1 (if at least 21 consecutive days) or 0 (if less than 21 consecutive days) in the column *Veg.21Day*.
 
-The function `period_correction` uses the base data (LGM), which has the calculated mean temperature, and sorts the data to show if the mean temperature is above or below 5 degrees Celsius. It is sorted by depicting either a 1 (if temperature is over 5 degrees) or 0 (if temperature is below 5 degrees) into the column *Veg*. The function also adds the period correction factor data (period_correction) from NGRIP and Black Sea to the base data (LGM). Afterwards the `calc_21` function is used to sort and show the vegetation period of the new data with the added season factors.
+The function `period_correction` uses the base data (LGM), which has the calculated mean temperature, and sorts the data to show if the mean temperature is above or below 5 degrees Celsius. It is sorted by depicting either a 1 (if temperature is over 5 degrees) or 0 (if temperature is below 5 degrees) into the column *Veg*. The function also adds the period correction factor data (period_correction) from NGRIP and Black Sea to the base data (LGM). Afterwards the `calc_21` function is used to sort and show the vegetation period of the new data with the added correction factors.
 
 ```R
 
@@ -350,7 +350,7 @@ DAY_21 <- function(p,period,month){
 
 #### Details CalcStepStandardised Functions
 
-The `stepfunction` seperate the LGM and BlackSea/NGRIP datasets and sets up the function `stepping` for LGM, NGRIP and BlackSea, with  the *step_day_size* (2,7,14,21,28).
+The `stepfunction` seperates the LGM and BlackSea/NGRIP datasets and sets up the function `stepping` for LGM, NGRIP and BlackSea, with  the *step_day_size* (2,7,14,21,28).
 
 The function `stepping` calculates the vegetation change and the route of transmission of the fauna migration in spring and autumn, by seperating the data into to sets: spring/summer and fall/winter. It will calculate the amount of days between coordinate nodes and vegetation period starts end ends.
 
@@ -378,8 +378,6 @@ stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, st
   df_result_max <- data.frame(c("a","b","c","d","e","f","g","h"))
 
   text =''
-  
-  # calculation of the min, max, sum and mean of DOY and sum of temperatures
 
   for (long in seq(from = long_west, to = long_east, step)){ # runs through every longitude
     
@@ -470,7 +468,7 @@ QGIS_ID <- function (lat,long) {
   return (out)
 }
 
-# seperate the LGM and BlackSea/NGRIP datasets and sets up the function stepping
+# seperate the LGM and BlackSea/NGRIP datasets and set up the function stepping
 
 stepfunction <- function(p,period,step_day_size){
   
@@ -497,7 +495,7 @@ stepfunction <- function(p,period,step_day_size){
 
 ### CalcFilter.R
 
-> The data created with the R script 21Day_ containing new temperature data with the use of the different period correction factor data tables as well as the creation of Vegetation periods, is now being sorted and compacted to show the result in a clearer overview. It will also be used to create nodes, which are necessary to portray the vegetation movement in QGIS.
+> The data created with the R script Calc21Day.R containing new temperature data with the use of the different period correction factor data tables as well as the creation of vegetation periods, is now being sorted and compacted to show the result in a clearer overview. It will also be used to create nodes, which are necessary to portray the vegetation movement in QGIS.
 
 #### CalcFilter Functions
 
@@ -618,159 +616,17 @@ VegPer_Results <- function (p,period,df_result_result){
 * Open the PaleolithicGreeningQGIS.qgz file with QGIS (3.10)
 * Select the Python Console once your QGIS file has opened
 * Click on the notepad with pen icon to show the Python editor
-* Open the Python scripts nodes.py, links.py and print.py
-* Select the nodes layer in the layer browser to the left, then run the nodes.py script
-* Repeat with the links.py script (select the layer and run the script)
+* Open the Python scripts links.py, nodes.py and print.py
+* Select the links layer in the layer browser to the left, then run the links.py script
+* Repeat with the nodes.py script (select the layer and run the script)
 * The last step in QGIS is to run the print.py script
 * The resulting vegetation period pull factor images will be exported to the folder extdata/QGIS
-
----
-
-### nodes.py
-
-> This Python script goes over all start and end dates of each vegetation period of all time periods and parameters (LGM, BlackSea and NGRIP) and proceeds to place defined symbols on each node/coordinate that shows a vegetation period. For the data used in this case, the start of the vegetation period goes from 100 - 210 DOY (Day of the Year), the end of the vegetation period goes from 200 - 320 DOY.
-
-#### nodes.py code
-
-```python
-
-#import geopandas as gpd
-from qgis.core import QgsVectorFileWriter
-import gdal , ogr
-import inspect
-
-def create_point_shape (csvFile, name, min_max):
-    #source_ds = ogr.Open(csvFile)
-    #layer = source_ds.GetLayer()
-    
-    layer = QgsVectorLayer(csvFile, name, "ogr")#, 'memory') 
-    
-    #prov = layer.dataProvider()
-
-    #prov.addAttributes([QgsField("ID",QVariant.Double),QgsField("DOY",QVariant.Double),QgsField("LAT",QVariant.Double),QgsField("LONG",QVariant.Double),QgsField("MAX",QVariant.Double),QgsField("QGIS_ID",QVariant.Double)]) 
-    #layer.updateFields()
-    #print (layer.fields().names())
-    #print(csvFile)
-    # add layer to the map
-    QgsProject.instance().addMapLayer(layer)
-    '''
-    # open the csv-file for reading and skip the header row
-    lineStrings = open(csvFile, encoding="utf-8")
-    print(q.decode())
-    next(lineStrings)
-
-    # start editing
-    layer.startEditing()
-
-    # loop over the lines, split them into 4 coordinates, build points from pairs of
-    # them, and connect the pair of points 
-    feats = []
-
-
-
-    for line in lineStrings:
-        line = re.sub("['\"]",'',line)
-        lineStringAsList = line.split(",")
-        
-        from_node = QgsPoint(float(lineStringAsList[0]),float(lineStringAsList[1]))
-        to_node = QgsPoint(float(lineStringAsList[2]),float(lineStringAsList[3]))
-        feat = QgsFeature()
-        fields = QgsFields()
-        feat.setFields(fields)
-
-        feat.setAttributes([float(i) for i in lineStringAsList[4:8]])
-        feat.setGeometry(QgsGeometry.fromPolyline([from_node, to_node]))
-        #feat['point_id']="Start Point"
-        #feat.setAttribute (float(lineStringAsList[4]))
-        feats.append(feat)
-
-    # finally add all created features and save edits
-    prov.addFeatures(feats)
-    layer.updateExtents()
-    '''
-    styling_nodes (layer, min_max)
-    
-    #export_layout()
-    layer.commitChanges()
-    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(False)
-
-
-def styling_nodes (layer, min_max):
-    dir = 'layout_data/'
-    #renderer = layer.renderer().QgsGraduatedSymbolRenderer
-
-    
-    if min_max == 'min':
-        print(1)
-        layer.loadNamedStyle(dir + 'standardised_style_nodes_min.qml')
-        layer.triggerRepaint()
-        
-    else:
-        print(1)
-        layer.loadNamedStyle(dir + 'standardised_style_nodes_max.qml')
-        layer.triggerRepaint()
-    
-    layer.reload()
-    renderer = layer.renderer()
-    
-    #renderer.setMode(QgsGraduatedSymbolRendererV2.Quantile)
-   #renderer.updateClasses(layer,renderer.Quantile,5)
-    #renderer.updateRangeLabels() 
-    #iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
-    layer.reload() 
-    #renderer.updateClasses(layer,renderer.Quantile,9)
-    iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
-    
-filename = inspect.getframeinfo(inspect.currentframe()).filename
-rel_path = os.path.dirname(os.path.dirname(os.path.abspath(filename)))
-
-
-for i in ['BlackSea','NGRIP','LGM']:
-    for j in ['min','max']:
-        if i == 'LGM':
-            k = '21Day_LGM'
-            
-            
-            
-            path = "file:///" + rel_path + "/VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".csv"
-            uri = path + "?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s&useHeader=%s" % ("UTF-8",",", "LONG", "LAT","epsg:4326","yes")
-            
-            name = "nodes_" + i + "_" + k + '_' + j 
-            vlayer = QgsVectorLayer(uri, name, 'delimitedtext')
-            #print(vlayer.isValid())
-            print (name) 
-            #iface.addVectorLayer(uri, name,'delimitedtext')
-            path = "../VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".shp"
-            QgsVectorFileWriter.writeAsVectorFormat(vlayer, path, "UTF-8", vlayer.crs(), "ESRI Shapefile") 
-            
-            create_point_shape (path, name, j)
-            
-        else:
-            for k in ["GS-3","GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
-                "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9"]:
-            
-                path = "file:///" + rel_path + "/VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".csv"
-                uri = path + "?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s&useHeader=%s" % ("UTF-8",",", "LONG", "LAT","epsg:4326","yes")
-                
-                name = "nodes_" + i + "_" + k + '_' + j 
-                vlayer = QgsVectorLayer(uri, name, 'delimitedtext')
-                #print(vlayer.isValid())
-
-                #iface.addVectorLayer(uri, name,'delimitedtext')
-                path = "../VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".shp"
-                QgsVectorFileWriter.writeAsVectorFormat(vlayer, path, "UTF-8", vlayer.crs(), "ESRI Shapefile") 
-                
-                create_point_shape (path, name, j)
-
-```
 
 ---
 
 ### links.py
 
 >The links.py script calculates and shows the strength of the green wave and the pull factors for each period and parameter (LGM, BlackSea and NGRIP). The layout and symbology are defined to show the strength of the green wave by displaying different shades of green to show the difference between the starting or endpoints of the vegetation period between each node. The difference in days bewteen the vegetation periods from the nearest coordinates are in this case from 2 days to 50 days.
-
-#### links.py script
 
 ```python
 
@@ -966,11 +822,147 @@ for file in os.listdir(directory):
 
 ---
 
+### nodes.py
+
+> This Python script goes over all start and end dates of each vegetation period of all time periods and parameters (LGM, BlackSea and NGRIP) and proceeds to place defined symbols on each node/coordinate that shows a vegetation period. For the data used in this case, the start of the vegetation period goes from 100 - 210 DOY (Day of the Year), the end of the vegetation period goes from 200 - 320 DOY.
+
+```python
+
+#import geopandas as gpd
+from qgis.core import QgsVectorFileWriter
+import gdal , ogr
+import inspect
+
+def create_point_shape (csvFile, name, min_max):
+    #source_ds = ogr.Open(csvFile)
+    #layer = source_ds.GetLayer()
+    
+    layer = QgsVectorLayer(csvFile, name, "ogr")#, 'memory') 
+    
+    #prov = layer.dataProvider()
+
+    #prov.addAttributes([QgsField("ID",QVariant.Double),QgsField("DOY",QVariant.Double),QgsField("LAT",QVariant.Double),QgsField("LONG",QVariant.Double),QgsField("MAX",QVariant.Double),QgsField("QGIS_ID",QVariant.Double)]) 
+    #layer.updateFields()
+    #print (layer.fields().names())
+    #print(csvFile)
+    # add layer to the map
+    QgsProject.instance().addMapLayer(layer)
+    '''
+    # open the csv-file for reading and skip the header row
+    lineStrings = open(csvFile, encoding="utf-8")
+    print(q.decode())
+    next(lineStrings)
+
+    # start editing
+    layer.startEditing()
+
+    # loop over the lines, split them into 4 coordinates, build points from pairs of
+    # them, and connect the pair of points 
+    feats = []
+
+
+
+    for line in lineStrings:
+        line = re.sub("['\"]",'',line)
+        lineStringAsList = line.split(",")
+        
+        from_node = QgsPoint(float(lineStringAsList[0]),float(lineStringAsList[1]))
+        to_node = QgsPoint(float(lineStringAsList[2]),float(lineStringAsList[3]))
+        feat = QgsFeature()
+        fields = QgsFields()
+        feat.setFields(fields)
+
+        feat.setAttributes([float(i) for i in lineStringAsList[4:8]])
+        feat.setGeometry(QgsGeometry.fromPolyline([from_node, to_node]))
+        #feat['point_id']="Start Point"
+        #feat.setAttribute (float(lineStringAsList[4]))
+        feats.append(feat)
+
+    # finally add all created features and save edits
+    prov.addFeatures(feats)
+    layer.updateExtents()
+    '''
+    styling_nodes (layer, min_max)
+    
+    #export_layout()
+    layer.commitChanges()
+    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(False)
+
+
+def styling_nodes (layer, min_max):
+    dir = 'layout_data/'
+    #renderer = layer.renderer().QgsGraduatedSymbolRenderer
+
+    
+    if min_max == 'min':
+        print(1)
+        layer.loadNamedStyle(dir + 'standardised_style_nodes_min.qml')
+        layer.triggerRepaint()
+        
+    else:
+        print(1)
+        layer.loadNamedStyle(dir + 'standardised_style_nodes_max.qml')
+        layer.triggerRepaint()
+    
+    layer.reload()
+    renderer = layer.renderer()
+    
+    #renderer.setMode(QgsGraduatedSymbolRendererV2.Quantile)
+   #renderer.updateClasses(layer,renderer.Quantile,5)
+    #renderer.updateRangeLabels() 
+    #iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
+    layer.reload() 
+    #renderer.updateClasses(layer,renderer.Quantile,9)
+    iface.layerTreeView().refreshLayerSymbology(layer.id()) # Refresh legend on the interface
+    
+filename = inspect.getframeinfo(inspect.currentframe()).filename
+rel_path = os.path.dirname(os.path.dirname(os.path.abspath(filename)))
+
+
+for i in ['BlackSea','NGRIP','LGM']:
+    for j in ['min','max']:
+        if i == 'LGM':
+            k = '21Day_LGM'
+            
+            
+            
+            path = "file:///" + rel_path + "/VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".csv"
+            uri = path + "?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s&useHeader=%s" % ("UTF-8",",", "LONG", "LAT","epsg:4326","yes")
+            
+            name = "nodes_" + i + "_" + k + '_' + j 
+            vlayer = QgsVectorLayer(uri, name, 'delimitedtext')
+            #print(vlayer.isValid())
+            print (name) 
+            #iface.addVectorLayer(uri, name,'delimitedtext')
+            path = "../VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".shp"
+            QgsVectorFileWriter.writeAsVectorFormat(vlayer, path, "UTF-8", vlayer.crs(), "ESRI Shapefile") 
+            
+            create_point_shape (path, name, j)
+            
+        else:
+            for k in ["GS-3","GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
+                "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9"]:
+            
+                path = "file:///" + rel_path + "/VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".csv"
+                uri = path + "?encoding=%s&delimiter=%s&xField=%s&yField=%s&crs=%s&useHeader=%s" % ("UTF-8",",", "LONG", "LAT","epsg:4326","yes")
+                
+                name = "nodes_" + i + "_" + k + '_' + j 
+                vlayer = QgsVectorLayer(uri, name, 'delimitedtext')
+                #print(vlayer.isValid())
+
+                #iface.addVectorLayer(uri, name,'delimitedtext')
+                path = "../VegPer_Results/Filter_Results/Filter_Results_" + i + "/nodes/nodes_" + j + "_" + k + ".shp"
+                QgsVectorFileWriter.writeAsVectorFormat(vlayer, path, "UTF-8", vlayer.crs(), "ESRI Shapefile") 
+                
+                create_point_shape (path, name, j)
+
+```
+
+---
+
 ### print.py
 
 > Running the print.py script, allows QGIS to combine the layers, that have been collected through the nodes.py script and the links.py script, and give these images a legend and a title. Through the print.py script the images now show the pull factors and the strength of the green wave for each period and parameter (LGM, BlackSea and NGRIP). The images are exported and can be found in the folder VegPer_QGIS/extdata/QGIS.
-
-#### print.py script
 
 ```python
 
@@ -1104,6 +1096,8 @@ for i in list(['Elevation (m)','Ice sheet (interstadial)','Ice sheet (LGM)','Riv
     '''
 
 ```
+
+---
 
 ### Additional script
 
