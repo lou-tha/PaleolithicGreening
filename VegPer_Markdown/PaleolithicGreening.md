@@ -1,10 +1,10 @@
 # PaleolithicGreening
 
- Supplement for the publication: **Where the grass is greener: Estimated vegetation periods and their explanatory potential for site distribution in the East European Plain**
+ Supplement for the publication: **Where the grass is greener – large-scale phenological patterns and their explanatory potential for the distribution of Paleolithic hunter-gatherers in Europe**
 
-**Authors:** Florian Linsel, Louise Tharandt
+**Authors:** Andreas Maier, Louise Tharandt, Florian Linsel, Vladislav Krakov, Patrick Ludwig
 
-**Date:** 03/31/2022
+**Date:** 08/25/2022
 
 **Description:**
 
@@ -26,6 +26,13 @@ To get a better overview and be able to compare the pull factors of spring and f
 
 Please cite the use of this script as:
 
+---
+
+## additional Information
+
+The data of this supplement covers our first case study, the Early and Mid-Upper Paleolithic in the East European Plain. The data of the second case study was used to test how this script would work with a different data set. The data used for the second case study, the Aurignacian in Western and Central Europe, will be indicated in brackets () in the section variables.
+
+---
 ---
 
 ### Folder structure and contents
@@ -93,11 +100,11 @@ The following scripts were used to automatically calculate the vegetation period
 
 ### Variables
 
-*parameter* : LGM, Black Sea, NGRIP
+*parameter* : LGM, Black Sea, NGRIP and (NGRIPv2)
 
 *LGM* : base data file
 
-*period* : GS-3, GI-3, GS-4, GI-4, GS-5.1, GI-5.1, GS-5.2, GI-5.2, GS-6, GI-6, GS-7, GI-7, GS-8, GI-8, GS-9, GI-9
+*period* : GS-3, GI-3, GS-4, GI-4, GS-5.1, GI-5.1, GS-5.2, GI-5.2, GS-6, GI-6, GS-7, GI-7, GS-8, GI-8, GS-9, GI-9 and (GS-8, GI-8, GS-11, GI-11)
 
 *month* : 1 through 12 (1:12)
 
