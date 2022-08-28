@@ -13,6 +13,7 @@ publication <- function (path,tbl,inter) {
 	df_result <- data.frame()
 	text = p
 	for (i in seq(from = 47.5, to = 65, 2.5)){ text = paste (c(text,'', i, 'Start veg. day', 'End veg. day', 'Veg. sum days','Sum of temperature'))}
+	# for (i in seq(from = 35, to = 55, 2.5)) second case study
 	df_result <- cbind(text)
 	
 	#creation of nodes:
@@ -25,12 +26,14 @@ publication <- function (path,tbl,inter) {
 	
 	# calculation of the min, max, sum and mean of DOY and sum of temperature
 	for (long in seq(from = 20, to = 60, 2.5)){ # runs through every longitude
-		
+	# for (long in seq(from = -10, to = 30, 2.5)) second case study
+
 		node_min = ''
 		node_max = ''
 		stats=''
 		
 		for (lat in seq(from = 47.5, to = 65, 2.5)){ # runs through every latitude
+		# for (lat in seq(from = 35, to = 55, 2.5)) second case study
 			result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] # filtering according to coordinates
 			stats <- c(stats,'',long,min(result$DOY, na.rm=T),max(result$DOY,na.rm=T),max(result$DOY,na.rm=T)-min(result$DOY, na.rm=T),sum(result$Temp_mean,na.rm=T)) 
 			

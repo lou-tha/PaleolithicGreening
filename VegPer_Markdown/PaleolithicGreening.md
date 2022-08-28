@@ -1,52 +1,54 @@
 # PaleolithicGreening
 
- Supplement for the publication: **Where the grass is greener – large-scale phenological patterns and their explanatory potential for the distribution of Paleolithic hunter-gatherers in Europe**
+## Data for the publication: **Where the grass is greener – large-scale phenological patterns and their explanatory potential for the distribution of Paleolithic hunter-gatherers in Europe**
 
-**Authors:** Andreas Maier, Louise Tharandt, Florian Linsel, Vladislav Krakov, Patrick Ludwig
+Andreas Maier (1), Louise Tharandt (1), Florian Linsel (2), Vladislav Krakov (3), Patrick Ludwig (4)
 
-**Date:** 08/25/2022
+(1): Institute for Prehistoric Archaeology, University of Cologne, Bernhard-Feilchenfeld-Str. 11, 50969 Köln
 
-**Description:**
+(2): Institute of Computer Science, Martin-Luther_Universität Halle-Wittenberg, Von-Seckendorff-Platz 1, 06120 Halle
 
-> Our study relies on the following work routine. This supplement is written in R. One of our primary goals is to perform all functions provided. The documentation and the complete workflow are published. All consecutive analyses can follow the exemplary procedure.  This script contains the main functionality of our research, in which all parameters needed for conducting the functions used in scripts, libraries and packages are introduced. Our project is reproducible, which is easily done by running the following script (main.R).
+(3): Department of Archaeology, Simon Fraser University, Education Building 9635, 8888 University Drive, Burnaby, British Columbia
 
----
+(4): Karlsruhe Institute of Technology, Institute of Metereology and Climate Research, Department Troposphere Research (IMK-TRO), Hermann-von-Helmholtz-Platz 1, 76344 Eggenstein-Leopoldshafen
 
-## Workflow
+## Description
 
-To start, open the **main.R** script in the VegPer_R_Scripts folder, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the funcions and script, check the folder **VegPer_Results** (see section folder structure) and view the created csv files. Depending on the computer this code runs on and the number of data that is used, the results can appear after a while.
-
-To see the vegetation period pull factors in a geographical context, the next step is to open the **PaleolithicGreeningQGIS.qgz** file with QGIS (3.10). Select the Python Console once your QGIS file has opened. Next click on the notepad with pen icon to show the Python editor. If the Python files are not visible, go to the folder symbol to open the Python scripts links.py, nodes.py and print.py (see folder structure below). Select the links layer in the layer browser to the left, then run the links.py script. Repeat with the nodes.py script (select the nodes layer and run the script). The last step in QGIS is to run the print.py script. Nothing has to be selected, just run the Python script and the resulting vegetation period pull factor images will be exported to the folder extdata/QGIS.
-
-To get a better overview and be able to compare the pull factors of spring and fall in each period, use the **plot_2x2.R** script. This will combine the single plot images, that were exported from QGIS. Open the R script, select all and press run. The results can be fund in the folder extdata/2x2.
-
----
+Our study relies on the following work routine. This script is written in R and Python. One of our primary goals is to perform all functions provided. The documentation and the complete workflow are published. All consecutive analyses can follow the exemplary procedure.  This script contains the main functionality of our research, in which all parameters needed for conducting the functions used in scripts, libraries and packages are introduced. Our project is reproducible, which is easily done by running the following script (main.R).
 
 ## Notes
 
 Please cite the use of this script as:
 
 ---
-
-## additional Information
-
-The data of this supplement covers our first case study, the Early and Mid-Upper Paleolithic in the East European Plain. The data of the second case study was used to test how this script would work with a different data set. The data used for the second case study, the Aurignacian in Western and Central Europe, will be indicated in brackets () in the section variables.
-
 ---
+
+## Workflow
+
+Place temperature data and period factor data for specific geographic area in the Base Data folder, give the selected periods a specific name and place them as the global parameter in the **main.R** script. Place the selected period in the **main.R** script behind the paremeter period. Provide the link to the temperature base data so the csv file can be read by R. The selected geographical area needs to be defined behind the parameter step_list for the **CalcStepsStandardised.R** script. The size of the distances between coordinates has to be 2.5 degrees in any direction.
+
+To start the analysis, open the **main.R** script in the VegPer_R_Scripts folder, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the funcions and script, check the folder **VegPer_Results** (see section folder structure) and view the created csv files. Depending on the computer this code is run on and the number of data that is used, the results can appear after a while.
+
+To see the vegetation period pull factors in a geographical context, the next step is to open the **PaleolithicGreeningQGIS.qgz** file with QGIS (3.10). Select the Python Console once your QGIS file has opened. Next click on the notepad with pen icon to show the Python editor. If the Python files are not visible, go to the folder symbol to open the Python scripts links.py, nodes.py and print.py (see folder structure below). Select the links layer in the layer browser to the left, then run the **links.py** script. Repeat with the **nodes.py** script (select the nodes layer and run the script). The last step in QGIS is to run the **print.py** script. Nothing has to be selected, just run the Python script and the resulting vegetation period pull factor images will be exported to the folder extdata/QGIS. The layout of the visualized data can be defined and changed depending on what is interesting to show.
+
+To get a better overview and be able to compare the pull factors of spring and fall in each period, use the **plot_2x2.R** script after having exported all images from QGIS with the print.py script. This will combine the single plot images, that were exported from QGIS. Open the R script, select all and press run. The results can be fund in the folder extdata/2x2.
+
 ---
 
 ### Folder structure and contents
 
-> this folder structure has been built to clearly structure the data input and the results that are generated through this script.
+> this folder structure has been built to clearly organize the data input and the results that are generated through this script.
 
-* Base Data:
+* Base Data **(this folder contains the basic temperature and period factor data of the region that is chosen to be analyzed)**:
   * VegPer_Base_Data/LGM_Base_Data.csv
   * VegPer_Base_Data/Period_BlackSea.csv
   * VegPer_Base_Data/Period_NGRIP.csv
+  * VegPer_Base_Data/Period_NGRIPv2.csv (name the file Period_chosenparametername.csv, see main.R script)
   * VegPer_Base_Data/QGIS_ID_File.csv
+  * VegPer_Base_Data/QGIS_ID_File_v2.csv
   * VegPer_Base_Data/QGIS_ID_File.xlsx
 
-* QGIS
+* QGIS **(this folder contains all necessary QGIS rasterfiles as well as the python scripts to be used within QGIS)**:
   * pycache
   * exdata (Result Images from plotting the Vegetation Period in QGIS)
     * 2x2
@@ -63,14 +65,14 @@ The data of this supplement covers our first case study, the Early and Mid-Upper
   * sites (archaeological sites)
   * PaleolithicGreeningQGIS.qgz
 
-* Scripts
+* Scripts **(this folder contains every necessary R script, it will use the data provided in the Base Data folder)**:
   * main.R
   * Calc21Day.R
   * CalcStepsStandardised.R
   * CalcFilter.R
   * plot_2x2.R
 
-* Result Folder Structure
+* Result Folder Structure **(this folder contains an empty folder structure, within these folder all results from the R script will be placed)**:
   * VegPer_Results/21Day_BlackSea_Results
   * VegPer_Results/21Day_LGM_Results
   * VegPer_Results/21Day_NGRIP_Results
@@ -88,9 +90,7 @@ The data of this supplement covers our first case study, the Early and Mid-Upper
   
 ---
 
-## **Code**
-
-The following scripts were used to automatically calculate the vegetation periods and pull factors over multiple stadials and interstadials for BlackSea and NGRIP data sets.
+## **detailed descriptions to every script**
 
 ---
 
@@ -110,7 +110,7 @@ The following scripts were used to automatically calculate the vegetation period
 
 *step_day_size* : 2, 7, 14, 21, 28
 
-*step_list* : 20, 60, 47.5, 65, 2.5
+*step_list* : 20, 60, 47.5, 65, 2.5 or -10, 30, 35, 55, 2.5
 
 *df_result_result* : create new data frame
 
@@ -152,30 +152,26 @@ setwd("../") #reference inside of the github / working directory folder
 
 # global parameter: 
 parameter <- c("BlackSea" ,"NGRIP", "LGM") #name of the period data sets  
+# parameter <- c("NGRIPv2") second case study data
 
 # create new directories and folders for the results
 for (p in parameter){
-  dir.create(file.path(paste0('VegPer_Results/')), 
-  showWarnings = FALSE)
-  dir.create(file.path(paste0('VegPer_Results/Calc_Step_Results/Calc_Step_',p)), 
-  showWarnings = FALSE)
-  dir.create(file.path(paste0('VegPer_Results/21Day_',p,'_Results')), 
-  showWarnings = FALSE)
-  dir.create(file.path(paste0('VegPer_Results/Filter_Results')), 
-  showWarnings = FALSE)
-  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p)), 
-  showWarnings = FALSE)
-  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',
-  p,'/nodes')), showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/')), showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Calc_Step_Results/Calc_Step_',p)), showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/21Day_',p,'_Results')), showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results')), showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p)), showWarnings = FALSE)
+  dir.create(file.path(paste0('VegPer_Results/Filter_Results/Filter_Results_',p,'/nodes')), showWarnings = FALSE)
 }
 
 # input files
 # LGM base data that will be used to add factors to get the temperature data of stadial and interstadial periods
 LGM <- read.csv("VegPer_Base_Data/LGM_base_data.csv", header = T,  fileEncoding="UTF-8-BOM")
+# LGM <- read.csv("VegPer_Base_Data/LGM_base_data_simplified.csv", header = T,  fileEncoding="UTF-8-BOM") second case study data
 
 # list of stadial and interstadial climatic periods of interest:
 period <- c("GS-3", "GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9") 
-
+# period <- c("GS-8", "GI-8", "GS-11", "GI-11") second case study data
 
 ### Calc21Day.R
 
@@ -184,7 +180,8 @@ month <- c(1:12)
 
 # function to calculate the 21 day average of all periods and data sets
 lapply(parameter,DAY_21,period,month) 
-
+# this line is not used in the second case study, as no other data needs to be calculated and factors have to be added
+# a simple hashtag in front of this line will stop the line from being read by the program R
 
 ### CalcStepsStandardised.R
 
@@ -193,13 +190,19 @@ step_day_size <- c(2,7,14,21,28)
 
 # list of coordinates:
 step_list <- c(20, 60, 47.5, 65, 2.5)
+# step_list <- c(-10, 30, 35, 55, 2.5) second case study data
+# step_list_1 <- step_list [1]
+# step_list_2 <- step_list [2]
+# step_list_3 <- step_list [3]
+# step_list_4 <- step_list [4]
+# step_list_5 <- step_list [5]
+# segmented for the second case study and used in the script CalcStepsStandardised.R
 
 # set workspace and folders for results
 setwd("VegPer_Results/")
 
 # function to calculate the steps between each coordinate node of all periods and data sets:
 lapply (parameter,stepfunction,period,step_day_size) 
-
 
 ### CalcFilter.R
 
@@ -210,7 +213,6 @@ df_result_result <- data.frame()
 
 # function to filter the calculated results of all periods and data sets:
 lapply (parameter,VegPer_Results,period,df_result_result) 
-
 
 #### create the plots with Python and QGIS ####
 
@@ -251,7 +253,7 @@ calc_21 <- function (LGM_temp) {
   }else { 
    LGM_temp[i,]$Veg = 0 
   }
-  
+
   test1 <- subset(LGM_temp, ID >= i & ID < i+21)
   test2 <- subset(LGM_temp, ID <= i & ID > i-21)
   
@@ -267,11 +269,9 @@ calc_21 <- function (LGM_temp) {
 }
 
 # generate new temperature data and vegetation periods for BlackSea and NGRIP
-
 period_correction <- function (x,p,month) { 
 
   LGM_temp <- LGM # the existing LGM data is assigned to a new object, so the original data won't be manipulated
-
   LGM_temp$Period = x # the period list is assigned
 
   period_corr <- read.csv(paste("VegPer_Base_Data/Period_", p, ".csv", sep=""), header =T,  check.names = F)
@@ -284,7 +284,6 @@ period_correction <- function (x,p,month) {
   }
   
   i = 1
-
   while (i < nrow(LGM_temp)){ 
    if(LGM_temp[i,]$Temp_mean >= 5){ 
     LGM_temp[i,]$Veg = 1 
@@ -296,13 +295,11 @@ period_correction <- function (x,p,month) {
   }
   
   # calc_21 function for the data sets for BlackSea and NGRIP
-
   i = 1
   while (i < nrow(LGM_temp)){
    
    test1 <- subset(LGM_temp, ID >= i & ID < i+21)
    test2 <- subset(LGM_temp, ID <= i & ID > i-21)
-   
    
    if(sum(test1$Veg == 1) == 21 || sum(test2$Veg == 1) == 21){ 
     LGM_temp[i,]$Veg.21Day = 1 
@@ -315,7 +312,6 @@ period_correction <- function (x,p,month) {
 
   # export path
   path <- paste("VegPer_Results/21Day_", p, "_Results/",sep="")
-  
   # export the data in the for loop as new .csv file with the same period name as the period factor that was used 
   write.csv(LGM_temp, paste(path, x,".csv",sep=""))
 }
@@ -368,28 +364,19 @@ To define the coordinate nodes and step directions for the images in QGIS the fu
 # calculate the vegetation change and the route of transmission in spring and autumn
 
 stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step, step_day_size, p){
-
+# stepping <- function  (csv_file, step_list_3, step_list_4, step_list_1, step_list_2, step_list_5,step_day_size,p){ for the second case study
   tbl <-
     list.files(pattern = paste (csv_file,".csv", sep= '')) %>% 
     map_df(~read_csv(.))
-  
-
   # the for loop starts with the set up of the stadial or interstadial that is calculated
-  
   temp_data <- tbl
-  
   #long_west = 20, long_east = 60, lati_bottom = 47.5, lati_top = 65, step = 2.5 
-  
   VegPeriod_complete <- tbl[tbl$Veg.21Day == 1,]
   df_result <- data.frame(c("a","b","c","d","e","f","g","h"))
   df_result_max <- data.frame(c("a","b","c","d","e","f","g","h"))
-
   text =''
-
-  for (long in seq(from = long_west, to = long_east, step)){ # runs through every longitude
-    
-    #calculation of the vegetation change and the route of transmission of the fauna 
-    
+  for (long in seq(from = long_west, to = long_east, step)){ # runs through every longitude   
+  #calculation of the vegetation change and the route of transmission of the fauna 
     # migration in spring
     for (lat in seq(from = lati_bottom, to = lati_top, step)){ # runs through every latitude
       result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] #filtering point
@@ -397,7 +384,6 @@ stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, st
       for (xlong in seq(from = -step, to = step, step)){ 
         for (ylati in seq(from = 0, to = step, step)){
           for (a in step_day_size){
-            
             test <- VegPeriod_complete[VegPeriod_complete$Long == long + xlong & VegPeriod_complete$Lat == lat + ylati,]
             data_test <- min(test$DOY, na.rm=T)
             if (data_test == Inf){break 
@@ -407,22 +393,18 @@ stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, st
             } else if (data == data_test){break
             } else if (data <= data_test-a)
               {stats <- c(long,lat,long+xlong,lat+ylati,data_test-data,a,QGIS_ID (lat,long),QGIS_ID (lat+ ylati,long + xlong)) 
-              
             } else {
               break
             }
             df_result <- cbind (df_result, stats)
-
           }
         }
       }
-      
       # migration in autumn
       data_max <- max(result$DOY, na.rm=T) 
       for (xlong in seq(from = -step, to = step, step)){ 
         for (ylati in seq(from = -step, to = 0, step)){
           for (a in step_day_size){
-            
             test <- VegPeriod_complete[VegPeriod_complete$Long == long + xlong & VegPeriod_complete$Lat == lat + ylati,]
             data_test_max <- max(test$DOY, na.rm=T)
             if (data_max == -Inf){ break 
@@ -432,13 +414,10 @@ stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, st
             } else if (data_max == data_test_max-1){break
             } else if (data_max <= data_test_max-a)
               {stats_max <- c(long,lat,long+xlong,lat+ylati,data_test_max-data_max,a,QGIS_ID (lat,long),QGIS_ID (lat+ ylati,long + xlong)) 
-
             } else {
               break
             }
-            
             df_result_max <- cbind (df_result_max, stats_max)
-
           }
         }
       }
@@ -452,23 +431,18 @@ stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, st
   df_result_max <- df_result_max %>% t(.) %>% data.frame(.) %>% .[-c(0,1),]
   rownames(df_result_min) <- NULL
   rownames(df_result_max) <- NULL
-  
-  
   df_result_min [0,1] <- paste('"', df_result_min [0,1], sep ="")
   df_result_max [0,1] <- paste('"', df_result_min [0,1], sep ="")
-
-  
   path <- paste("../Calc_Step_Results/Calc_Step_",p,"/",sep="")
   x = "export"
-  
   write.csv(df_result_min, paste(path,p,'_',csv_file,"_min.csv",sep=""), row.names = F, col.names=F)
   write.csv(df_result_max, paste(path,p,'_',csv_file,"_max.csv",sep=""), row.names = F, col.names=F)
 }
 
 # define the coordinate nodes and step directions
-
 QGIS_ID <- function (lat,long) {
   QGIS_ID <- read_csv('../../VegPer_Base_Data/QGIS_ID_File.csv')
+   # QGIS_ID <- read_csv('../../VegPer_Base_Data/QGIS_ID_File_v2.csv') second case study
   val <- paste(long,'/',lat,sep='')
   QGIS_ID$Target == val
   out <- QGIS_ID[QGIS_ID$Target == val,]$ID
@@ -476,21 +450,15 @@ QGIS_ID <- function (lat,long) {
 }
 
 # seperate the LGM and BlackSea/NGRIP datasets and set up the function stepping
-
 stepfunction <- function(p,period,step_day_size){
-  
   if (p == "LGM") {
     period = "21Day_LGM"
-
     adress <- paste0("21Day_",p,"_Results",sep="")
     setwd(adress)
     stepping (period, step_list [1], step_list [2], step_list [3], step_list [4], step_list [5],step_day_size,p)
-    
   }else {
-    
     adress <- paste0("21Day_",p,"_Results",sep="")
     setwd(adress)
-
     lapply(period, step_list [1], step_list [2], step_list [3], step_list [4], step_list [5],step_day_size,p)
     setwd("../")
   }
@@ -536,6 +504,7 @@ publication <- function (path,tbl,inter) {
 
  # creation of rows for the filtered csv file
  for (i in seq(from = 47.5, to = 65, 2.5)){ text = paste (c(text,'', i, 'Start veg. day', 'End veg. day', 'Veg. sum days','Sum of temperature'))}
+ # for (i in seq(from = 35, to = 55, 2.5)) second case study
  df_result <- cbind(text)
  
  #creation of nodes:
@@ -546,12 +515,14 @@ publication <- function (path,tbl,inter) {
  
  # calculation of the min, max, sum and mean of DOY and sum of temperature
  for (long in seq(from = 20, to = 60, 2.5)){ # runs through every longitude
+ # for (long in seq(from = -10, to = 30, 2.5)) second case study
   
   node_min = ''
   node_max = ''
   stats=''
   
   for (lat in seq(from = 47.5, to = 65, 2.5)){ # runs through every latitude
+  # for (lat in seq(from = 35, to = 55, 2.5)) second case study
    result <- VegPeriod_complete[VegPeriod_complete$Long == long & VegPeriod_complete$Lat == lat,] # filtering according to coordinates
    stats <- c(stats,'',long,min(result$DOY, na.rm=T),max(result$DOY,na.rm=T),max(result$DOY,na.rm=T)-min(result$DOY, na.rm=T),sum(result$Temp_mean,na.rm=T)) 
    
