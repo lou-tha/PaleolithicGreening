@@ -1,3 +1,9 @@
+# File:    links.py
+# Author:  Florian Linsel
+
+#############################################
+
+
 import re
 
 import gdal , ogr
@@ -185,3 +191,6 @@ for file in os.listdir(directory):
          continue
     
 '''
+
+
+

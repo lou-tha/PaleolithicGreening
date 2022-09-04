@@ -91,6 +91,7 @@ period_correction <- function (x,p,month) {
 
 DAY_21 <- function(p,period,month){
 	LGM <- read.csv("VegPer_Base_Data/LGM_base_data.csv", header = T,  fileEncoding="UTF-8-BOM")
+	# LGM <- read.csv("VegPer_Base_Data/LGM_base_data_simplified.csv", header = T,  fileEncoding="UTF-8-BOM")
 
 	if (p == "LGM") {
 		# export path
@@ -104,3 +105,5 @@ DAY_21 <- function(p,period,month){
 		lapply(period,period_correction,p,month)
 	}
 }
+
+

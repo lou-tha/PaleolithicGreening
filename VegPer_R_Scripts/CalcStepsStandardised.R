@@ -3,13 +3,7 @@
 
 #############################################
 
-# input files/ implementation of variables
-# the new data, that was looped through the base data and had factors added to show the data of other stadial and interstadial
-# import the data from the folder were it was exported to from the loop script
-# folder_data = list.files(pattern="*.csv")
-# loop_data = lapply(folder_data, read.delim)
-
-#stepping_stone (package) 
+# calculating the vegetation period pull
 
 stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step, step_day_size, p){
 # stepping <- function  (csv_file, step_list_3, step_list_4, step_list_1, step_list_2, step_list_5,step_day_size,p){ for the second case study

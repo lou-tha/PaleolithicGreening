@@ -1,3 +1,9 @@
+# File:    print.py
+# Author:  Florian Linsel
+
+#############################################
+
+
 #!/usr/bin/env python3
 import os
 from qgis.core import (QgsProject, QgsLayoutExporter, QgsApplication)
@@ -126,3 +132,5 @@ for i in list(['Elevation (m)','Ice sheet (interstadial)','Ice sheet (LGM)','Riv
     layer = projectInstance.mapLayersByName(i)[0]
     QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(False)
     '''
+
+

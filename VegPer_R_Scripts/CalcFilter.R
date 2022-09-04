@@ -3,6 +3,7 @@
 
 #############################################
 
+# compact information in overview table
 
 publication <- function (path,tbl,inter) { 
 	
@@ -98,4 +99,5 @@ VegPer_Results <- function (p,period,df_result_result){
   
   setwd("../")
 }
+
 

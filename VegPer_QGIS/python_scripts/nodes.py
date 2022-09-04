@@ -1,3 +1,9 @@
+# File:    nodes.py
+# Author:  Florian Linsel
+
+#############################################
+
+
 #import geopandas as gpd
 from qgis.core import QgsVectorFileWriter
 import gdal , ogr
@@ -127,3 +133,4 @@ for i in ['BlackSea','NGRIP','LGM']:
                 create_point_shape (path, name, j)
                 
                 
+
