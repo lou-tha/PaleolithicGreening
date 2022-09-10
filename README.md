@@ -43,7 +43,6 @@ Please cite the use of this script as:
   * pycache
   * 37-5_Aur_all
   * exdata (Result Images from plotting the Vegetation Period in QGIS)
-    * 2x2
     * QGIS
   * geographical_data (QGIS geographical layers)
   * layout_data (QGIS symbology and layout files)
@@ -62,7 +61,6 @@ Please cite the use of this script as:
   * Calc21Day.R
   * CalcStepsStandardised.R
   * CalcFilter.R
-  * plot_2x2.R
 
 * VegPer_Results **(this folder contains an empty folder structure, within these folder all results from the R scripts will be placed)**:
   * VegPer_Results/21Day_BlackSea_Results
@@ -89,8 +87,6 @@ To calculate your own data, place the new temperature data and period factor dat
 To start or recreate the analysis, open the **main.R** script in the *VegPer_R_Scripts* folder with R or R Studio, select all and run the script. From this main.R script all other scripts are invoked and run. To see the progress of the functions and scripts, check the folder **VegPer_Results** (see folder structure) and view the created csv files. Depending on the computer this code is run on and the number of data that is used, the results can appear after a while.
 
 To see the vegetation period pull factors in a geographical context, the next step is to open the **PaleolithicGreeningQGIS.qgz** file with QGIS (3.10). Select the Python Console once your QGIS file has opened. Next click on the notepad with pen icon to show the Python editor. If the Python files are not visible, go to the folder symbol to open the Python scripts links.py, nodes.py and print.py (see folder structure). Select the links layer in the layer browser to the left, then run the **links.py** script. Repeat with the **nodes.py** script (select the nodes layer and run the script). The last step in QGIS is to run the **print.py** script. Nothing has to be selected, just run the Python script and the resulting vegetation period pull factor images will be exported to the folder extdata/QGIS. The layout of new visualized data needs be defined and changed depending on where the geographical area is located and the start and ending dates of the vegetation period.
-
-To get a better overview and be able to compare the pull factors of spring and fall in each period, use the **plot_2x2.R** script after having exported all images from QGIS with the print.py script. This will combine the single plot images, that were exported from QGIS. Open the R script, select all of the code and press run. The results can be fund in the folder VegPer_QGIS/extdata/2x2.
 
 ---
 
