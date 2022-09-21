@@ -23,8 +23,8 @@ setwd("../") #reference inside of the github / working directory folder
 
 
 # global parameter: 
-parameter <- c("BlackSea" ,"NGRIP", "LGM") #name of the period data sets  
-# parameter <- c("NGRIPv2") second case study data
+parameter <- c("BlackSea" ,"NGRIP", "LGM") # name of the period data sets  
+# parameter <- c("NGRIPv2") # second case study data
 
 
 # create new directories and folders for the results
@@ -41,13 +41,13 @@ for (p in parameter){
 # input files
 # LGM base data that will be used to add factors to get the temperature data of stadial and interstadial periods
 LGM <- read.csv("VegPer_Base_Data/LGM_base_data.csv", header = T,  fileEncoding="UTF-8-BOM")
-# LGM <- read.csv("VegPer_Base_Data/LGM_base_data_simplified.csv", header = T,  fileEncoding="UTF-8-BOM") second case study data
+# LGM <- read.csv("VegPer_Base_Data/LGM_base_data_simplified.csv", header = T,  fileEncoding="UTF-8-BOM") # second case study data
 
 
 # list of stadial and interstadial climatic periods of interest
 period <- c("GS-3", "GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.2", 
             "GS-6", "GI-6", "GS-7", "GI-7", "GS-8", "GI-8", "GS-9", "GI-9")
-# period <- c("GS-8", "GI-8", "GS-11", "GI-11") second case study data
+# period <- c("GS-8", "GI-8", "GS-11", "GI-11") # second case study data
 
 
 
@@ -69,7 +69,7 @@ lapply(parameter,DAY_21,period,month) # function to calculate the 21 day average
 
 #list of coordinates
 step_list <- c(20, 60, 47.5, 65, 2.5)
-# step_list <- c(-10, 30, 35, 55, 2.5) second case study data
+# step_list <- c(-10, 30, 35, 55, 2.5) # second case study data
 # step_list_1 <- step_list [1]
 # step_list_2 <- step_list [2]
 # step_list_3 <- step_list [3]
