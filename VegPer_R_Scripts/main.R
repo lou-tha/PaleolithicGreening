@@ -70,12 +70,12 @@ lapply(parameter,DAY_21,period,month) # function to calculate the 21 day average
 #list of coordinates
 step_list <- c(20, 60, 47.5, 65, 2.5)
 # step_list <- c(-10, 30, 35, 55, 2.5) # second case study data
-# step_list_1 <- step_list [1]
-# step_list_2 <- step_list [2]
-# step_list_3 <- step_list [3]
-# step_list_4 <- step_list [4]
-# step_list_5 <- step_list [5]
-# segmented for the second case study and used in the script CalcStepsStandardised.R
+
+
+
+
+
+
 
 #list of parameters needed for step-function
 step_day_size <- c(2,7,14,21,28) 
