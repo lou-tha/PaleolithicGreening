@@ -59,8 +59,8 @@ period <- c("GS-3", "GI-3", "GS-4", "GI-4", "GS-5.1", "GI-5.1", "GS-5.2", "GI-5.
 month <- c(1:12)
 
 lapply(parameter,DAY_21,period,month) # function to calculate the 21 day average of all periods and data sets
-# this line is not used in the second case study, as no other data needs to be calculated and factors have to be added
-# a simple hashtag in front of this line will stop the line from being read by the program R
+
+
 
 
 
