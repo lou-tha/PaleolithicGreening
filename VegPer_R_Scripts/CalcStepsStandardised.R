@@ -6,7 +6,7 @@
 # calculating the vegetation period pull
 
 stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, step, step_day_size, p){
-# stepping <- function  (csv_file, step_list_3, step_list_4, step_list_1, step_list_2, step_list_5,step_day_size,p){ for the second case study
+
   
   tbl <-
     list.files(pattern = paste (csv_file,".csv", sep= '')) %>% 
@@ -109,7 +109,7 @@ stepping <- function  (csv_file, long_west, long_east, lati_bottom, lati_top, st
 
 QGIS_ID <- function (lat,long) {
   QGIS_ID <- read_csv('../../VegPer_Base_Data/QGIS_ID_File.csv')
-  # QGIS_ID <- read_csv('../../VegPer_Base_Data/QGIS_ID_File_v2.csv') second case study
+  # QGIS_ID <- read_csv('../../VegPer_Base_Data/QGIS_ID_File_v2.csv') # second case study
   val <- paste(long,'/',lat,sep='')
   QGIS_ID$Target == val
   out <- QGIS_ID[QGIS_ID$Target == val,]$ID
