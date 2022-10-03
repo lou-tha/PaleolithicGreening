@@ -6,7 +6,7 @@
 
 import re
 
-import gdal , ogr
+from osgeo import gdal , ogr
 import pandas as pd
 import numpy as np
 import os, sys
