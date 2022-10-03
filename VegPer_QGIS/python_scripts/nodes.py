@@ -6,7 +6,7 @@
 
 #import geopandas as gpd
 from qgis.core import QgsVectorFileWriter
-import gdal , ogr
+from osgeo import gdal , ogr
 import inspect
 
 def create_point_shape (csvFile, name, min_max):
