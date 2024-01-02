@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Linsel"
+  given-names: "Florian"
+  orcid: "https://orcid.org/0000-0001-8855-9332"
+- family-names: "Tharandt"
+  given-names: "Louise"
+  orcid: "https://orcid.org/0009-0009-5967-2809"
+- family-names: "Krakov"
+  given-names: "Vladislav"
+- family-names: "Ludwig"
+  given-names: "Patrick"
+  orcid: "https://orcid.org/0000-0003-3655-7890"
+- family-names: "Maier"
+  given-names: "Andreas"
+  orcid: "https://orcid.org/0000-0002-5021-3341"
+title: "PaleolithicGreening"
+version: 1.0.0
+doi: 10.5281/zenodo.10450454 
+date-released: 2024-01-02
+url: "https://github.com/lou-tha/PaleolithicGreening"
+
